@@ -75,7 +75,9 @@ use Illuminate\Support\Facades\Auth;
                   @csrf
                   <button type="submit" class="btn btn-outline" id="AuthBtn" data-form="login"><i
                       class="bi bi-person-circle"></i>
-                    {{ Auth::user()->name ? '(' . Auth::user()->name . ')' : '' }} {{ Auth::user()->email }}</button>
+                    {{ Auth::user()->Role === 'Admin' ? '[ADMIN]' : '' }}
+                    {{ Auth::user()->name ? '(' . Auth::user()->name . ')' : '' }}
+                    {{ Auth::user()->email }}</button>
                 </form>
               @else
                 <button class="btn btn-outline-secondary" id="AuthBtn" data-bs-toggle="modal"

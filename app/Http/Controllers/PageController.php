@@ -2,28 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Room;
+use App\Models\Service;
+
 class PageController extends Controller {
   public function home() {
-    return view('home', ['title' => 'Home']);
+    return view('customer.home', ['title' => 'Home', 'Rooms' => Room::all()]);
   }
 
   public function explore() {
-    return view('explore', ['title' => 'Explore']);
+    return view('customer.explore', ['title' => 'Explore', 'Services' => Service::get()]);
   }
 
   public function rooms() {
-    return view('rooms', ['title' => 'Rooms']);
+    return view('customer.rooms', ['title' => 'Rooms', 'Rooms' => Room::get()]);
   }
 
   public function about() {
-    return view('about', ['title' => 'About']);
+    return view('customer.about', ['title' => 'About']);
   }
 
   public function contact() {
-    return view('contact', ['title' => 'Contact']);
+    return view('customer.contact', ['title' => 'Contact']);
   }
 
   public function booking() {
-    return view('booking', ['title' => 'Booking']);
+    return view('customer.booking', ['title' => 'Booking']);
+  }
+
+  public function checkout($RoomID) {
+    return view('customer.checkout', ['title' => 'Checkout'], ['Room' => Room::findOrFail($RoomID)]);
   }
 }
