@@ -32,9 +32,13 @@ class PageController extends Controller {
   }
 
   public function checkout($RoomID) {
-    if (!Auth::check()) {
-      return back()->with('toast_error', 'You must be logged in to access this page.');
-    }
+    $this->AccessCheck();
     return view('customer.checkout', ['title' => 'Checkout'], ['Room' => Room::findOrFail($RoomID)]);
+  }
+
+  private function AccessCheck() {
+    if (!Auth::check()) {
+      abort(403, 'Unauthorized action.');
+    }
   }
 }

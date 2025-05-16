@@ -45,6 +45,6 @@ class AuthController extends Controller {
     Auth::logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();
-    return back()->with('toast_success', 'Logout successful!');
+    return redirect()->route('home')->with('toast_success', 'Logout successful!');
   }
 }

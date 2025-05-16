@@ -17,12 +17,17 @@ Route::post('/register', [AuthController::class, 'RegisterUser'])->name('registe
 Route::post('/login', [AuthController::class, 'LoginUser'])->name('login');
 Route::post('/logout', [AuthController::class, 'LogoutUser'])->name('logout');
 
-//
-//Route::middleware(RestrictByRole::class.':Customer')->group(function () {
-//});
+// Route::middleware('RestrictByRole:Customer,Cashier')->group(function () {
+// });
 Route::get('/room/{RoomID}/checkout', [PageController::class, 'checkout'])->name('checkout');
 
-//->middleware(RestrictByRole::class.':Admin')
+// Route::prefix('/admin')->middleware('RestrictByRole:Admin')->group(function () {
+// });
 Route::prefix('/admin')->group(function () {
   Route::get('/', [AdminController::class, 'Dashboard'])->name('admin.dashboard');
 });
+
+// Future cashier routes (add when needed)
+// Route::prefix('/cashier')->middleware('RestrictByRole:Cashier')->group(function () {
+//     Route::get('/', [CashierController::class, 'dashboard'])->name('cashier.dashboard');
+// });

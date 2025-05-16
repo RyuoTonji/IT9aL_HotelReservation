@@ -7,12 +7,21 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller {
 
+  public function __construct() {
+    $this->middleware('RestrictByRole:Admin');
+  }
+
   public function Dashboard() {
-    if (!Auth::check()) {
-      return back()->with('toast_error', 'You must be logged in to access this page.');
-    } else if (Auth::user()->role !== 'Admin') {
-      return back()->with('toast_error', 'Restricted.');
-    }
+    $this->AdminCheck();
     return view('admin.dashboard', ['title' => 'Dashboard']);
+  }
+
+  private function AdminCheck() {
+    if (!Auth::check()) {
+      if(Auth::user()->role !== 'Admin') {
+        abort(403, 'Unauthorized action.');
+      }
+      abort(69420, 'Unauthorized action.');
+    }
   }
 }
