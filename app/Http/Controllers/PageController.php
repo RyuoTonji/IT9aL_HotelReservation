@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller {
   public function home() {
@@ -31,6 +32,9 @@ class PageController extends Controller {
   }
 
   public function checkout($RoomID) {
+    if (!Auth::check()) {
+      return back()->with('toast_error', 'You must be logged in to access this page.');
+    }
     return view('customer.checkout', ['title' => 'Checkout'], ['Room' => Room::findOrFail($RoomID)]);
   }
 }
