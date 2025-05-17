@@ -31,58 +31,35 @@
     <!-- Rooms Section -->
     <section class="mb-5">
       <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-          <div class="card h-100 room-card">
-            <div class="bg-light text-center" style="height: 200px; overflow: hidden;">
-              <img src="{{ asset('img/DeluxeRoom.jpg') }}" class="img-fluid"
-                style="width: 100%; height: 100%; object-fit: cover;" alt="Deluxe King Room">
-            </div>
-            <div class="card-body">
-              <h3 class="card-title fs-5">Deluxe King Room</h3>
-              <p class="card-text">Spacious room with a plush king-sized bed, modern amenities, and a private balcony
-                offering stunning city views. Perfect for solo travelers or couples.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="fw-bold">₱30,000/night</span>
-                <a href="booking.php" class="btn btn-primary">Book Now</a>
+        @forelse($Rooms as $room)
+          <div class="col">
+            <div class="card h-100 room-card">
+              <div class="bg-light text-center" style="height: 200px; overflow: hidden;">
+                <img src="{{ asset($room->ImagePathname) }}" class="img-fluid"
+                  style="width: 100%; height: 100%; object-fit: cover;" alt="Deluxe King Room">
+              </div>
+              <div class="card-body">
+                <h3 class="card-title fs-5">{{ $room->RoomName }}</h3>
+                <p class="card-text">{{ $room->RoomDescription }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="fw-bold">{{ $room->RoomPrice }}/night</span>
+                  <a href="booking.php" class="btn btn-primary">Book Now</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="card h-100 room-card">
-            <div class="bg-light text-center" style="height: 200px; overflow: hidden;">
-              <img src="{{ asset('img/SuperioRoom.png') }}" class="img-fluid"
-                style="width: 100%; height: 100%; object-fit: cover;" alt="Executive Suite">
-            </div>
-            <div class="card-body">
-              <h3 class="card-title fs-5">Executive Suite</h3>
-              <p class="card-text">Perfect for business travelers, our Executive Suite offers a spacious living area,
-                high-speed Wi-Fi, and a dedicated workspace for productivity.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="fw-bold">₱20,000/night</span>
-                <a href="booking.php" class="btn btn-primary">Book Now</a>
+        @empty
+          <div class="col">
+            <div class="card h-100 room-card">
+              <div class="card-body">
+                <h3 class="card-title fs-5">No Rooms</h3>
+                <p class="card-text">Currently no rooms at the moment, check back later.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="card h-100 roomc-card">
-            <div class="bg-light text-center" style="height: 200px; overflow: hidden;">
-              <img src="{{ asset('img/standardroom.png') }}" class="img-fluid"
-                style="width: 100%; height: 100%; object-fit: cover;" alt="Family Suite">
-            </div>
-            <div class="card-body">
-              <h3 class="card-title fs-5">Family Suite</h3>
-              <p class="card-text">Ideal for families, Couples, our Standard Suite includes multiple bedrooms, a cozy
-                living area,
-                and child-friendly amenities for a comfortable stay.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="fw-bold">₱10,000/night</span>
-                <a href="booking.php" class="btn btn-primary">Book Now</a>
-              </div>
-            </div>
-          </div>
-        </div>
+        @endforelse
       </div>
     </section>
   </main>
