@@ -75,7 +75,7 @@ class DatabaseSeeder extends Seeder {
       ],
       [
         'RoomSizeName' => 'Double',
-        'RoomSizeDescription' => 'Medium room size.',
+        'RoomSizeDescription' => 'Good for 2 people.',
         'RoomCapacity' => 2,
         'PricePerPerson' => 200.00,
         'RoomSizePrice' => 100000.00,
@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder {
       ],
       [
         'RoomSizeName' => 'Family',
-        'RoomSizeDescription' => 'Large room size.',
+        'RoomSizeDescription' => 'Family room size.',
         'RoomCapacity' => 10,
         'PricePerPerson' => 500.00,
         'RoomSizePrice' => 999999.00,
@@ -95,7 +95,7 @@ class DatabaseSeeder extends Seeder {
 
     DB::table('Rooms')->insert([
       [
-        'RoomName' => 'Standard Room',
+        'RoomName' => 'Standard',
         'RoomDescription' => 'A cozy room with basic amenities.',
         // 'RoomType' => 1,
         'RoomPrice' => 50000.00,
@@ -106,7 +106,7 @@ class DatabaseSeeder extends Seeder {
         'updated_at' => Carbon::now(),
       ],
       [
-        'RoomName' => 'Executive Room',
+        'RoomName' => 'Executive',
         'RoomDescription' => 'A superior room with premium amenities.',
         // 'RoomTypeID' => 2,
         'RoomPrice' => 100000.00,
@@ -117,7 +117,7 @@ class DatabaseSeeder extends Seeder {
         'updated_at' => Carbon::now(),
       ],
       [
-        'RoomName' => 'Deluxe Room',
+        'RoomName' => 'Deluxe',
         'RoomDescription' => 'A luxurious room with top-notch facilities.',
         // 'RoomTypeID' => 3,
         'RoomPrice' => 999999.00,

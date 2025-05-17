@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BookingController;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/explore', [PageController::class, 'explore'])->name('explore');
@@ -18,6 +19,7 @@ Route::post('/logout', [AuthController::class, 'LogoutUser'])->name('logout');
 
 Route::middleware('RestrictByRole:Customer,Cashier')->group(function () {
   Route::get('/room/{RoomID}/checkout', [PageController::class, 'checkout'])->name('checkout');
+  Route::post('/booking', [BookingController::class, 'AppendBooking'])->name('append.booking');
 });
 
 Route::prefix('/admin')->middleware('RestrictByRole:Admin')->group(function () {

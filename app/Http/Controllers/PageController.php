@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
+use App\Models\RoomSize;
 
 class PageController extends Controller {
   public function home() {
@@ -28,7 +29,7 @@ class PageController extends Controller {
   }
 
   public function booking() {
-    return view('customer.booking', ['title' => 'Booking']);
+    return view('customer.booking', ['title' => 'Booking', ['roomSizes' => RoomSize::get()]]);
   }
 
   public function checkout($RoomID) {

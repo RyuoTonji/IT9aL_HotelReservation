@@ -122,41 +122,85 @@
   <div class="booking-container">
     <div class="booking-content">
       <h2>Book Your Stay</h2>
-      <form>
+      <form action="{{ route('append.booking') }}" method="POST">
+        @csrf
+
         <div class="form-group">
           <label for="checkIn">Check-In Date</label>
           <div class="position-relative">
-            <input type="date" class="form-control" id="checkIn" placeholder="mm/dd/yyyy" required>
+            <input type="date" class="form-control" id="checkIn" placeholder="mm/dd/yyyy" name="CheckInDate"
+              value="{{ old('CheckInDate') }}" required>
             <i class="bi position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"></i>
           </div>
+          @error('CheckInDate')
+            <div class="alert alert-danger mt-2">{{ $message }}</div>
+          @enderror
         </div>
+
         <div class="form-group">
           <label for="checkOut">Check-Out Date</label>
           <div class="position-relative">
-            <input type="date" class="form-control" id="checkOut" placeholder="mm/dd/yyyy" required>
+            <input type="date" class="form-control" id="checkOut" placeholder="mm/dd/yyyy" name="CheckOutDate"
+              value="{{ old('CheckOutDate') }}" required>
             <i class="bi position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"></i>
           </div>
+          @error('CheckOutDate')
+            <div class="alert alert-danger mt-2">{{ $message }}</div>
+          @enderror
         </div>
-        <div class="form-group">
-          <label for="guests">Number of Guests</label>
-          <input type="number" class="form-control" id="guests" min="1" required>
-        </div>
+
         <div class="form-group">
           <label for="roomType">Room Type</label>
-          <select class="form-control" id="roomType" required>
-            <option value="" disabled selected>Select Room Type</option>
-            <option value="standard">Standard Room</option>
-            <option value="deluxe">Deluxe Room</option>
-            <option value="suite">Suite</option>
+          <select class="form-control" id="roomType" name="RoomType" required>
+            <option value="" disabled {{ old('RoomType') ? '' : 'selected' }}>Select Room Type</option>
+            <option value="Standard" {{ old('RoomType') == 'Standard' ? 'selected' : '' }}>Standard Room</option>
+            <option value="Executive" {{ old('RoomType') == 'Executive' ? 'selected' : '' }}">Executive Room</option>
+            <option value="Deluxe" {{ old('RoomType') == 'Deluxe' ? 'selected' : '' }}>Deluxe Room</option>
           </select>
+          @error('RoomType')
+            <div class="alert alert-danger mt-2">{{ $message }}</div>
+          @enderror
         </div>
+
+        <div class="form-group">
+          <label for="roomType">Room Size</label>
+          <select class="form-control" id="roomType" name="RoomSize" required>
+            <option value="" disabled {{ old('RoomSize') ? '' : 'selected' }}>Select Room Size</option>
+            <option value="Single" {{ old('RoomSize') == 'Single' ? 'selected' : '' }}>Single</option>
+            <option value="Double" {{ old('RoomSize') == 'Double' ? 'selected' : '' }}>Double</option>
+            <option value="Family" {{ old('RoomSize') == 'Family' ? 'selected' : '' }}>Family</option>
+          </select>
+          @error('RoomSize')
+            <div class="alert alert-danger mt-2">{{ $message }}</div>
+          @enderror
+        </div>
+
+        <div class="form-group">
+          <label for="guests">Number of Guests</label>
+          <input type="number" class="form-control" id="guests" min="1" name="NumberOfGuests"
+            value={{ old('NumberOfGuests') }} required>
+          @error('NumberOfGuests')
+            <div class="alert alert-danger mt-2">{{ $message }}</div>
+          @enderror
+        </div>
+
+        {{-- <div class="form-group">
+          <label for="guests">Number of Guests</label>
+          <input type="number" class="form-control" id="guests" min="1" name="NumberOfGuests"
+            value={{ old('NumberOfGuests') }} required>
+          @error('NumberOfGuests')
+            <div class="alert alert-danger mt-2">{{ $message }}</div>
+          @enderror
+        </div> --}}
+
         <div class="text-center">
-          <button type="button" class="btn btn-confirm" data-bs-toggle="modal" data-bs-target="#confirmModal">Confirm
+          <button type="submit" class="btn btn-confirm">Confirm
             Booking</button>
           <button type="button" class="btn btn-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel
             Booking</button>
           <button type="button" class="btn btn-draft">Save Draft</button>
         </div>
+
       </form>
     </div>
   </div>
@@ -192,4 +236,27 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const roomSizeSelect = document.getElementById('roomSize');
+      const guestsInput = document.getElementById('guests');
+
+      function updateGuestsMax() {
+        const selectedOption = roomSizeSelect.options[roomSizeSelect.selectedIndex];
+        const maxGuests = selectedOption ? selectedOption.getAttribute('data-capacity') : 1;
+        guestsInput.max = maxGuests || 1; // Fallback to 1 if undefined
+        // Reset guests input if current value exceeds new max
+        if (guestsInput.value > maxGuests) {
+          guestsInput.value = maxGuests;
+        }
+      }
+
+      // Update max on room size change
+      roomSizeSelect.addEventListener('change', updateGuestsMax);
+
+      // Initialize max on page load
+      updateGuestsMax();
+    });
+  </script>
 @endsection

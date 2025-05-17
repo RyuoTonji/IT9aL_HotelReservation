@@ -42,7 +42,7 @@
                 <h3 class="card-title fs-5">{{ $room->RoomName }}</h3>
                 <p class="card-text">{{ $room->RoomDescription }}</p>
                 <div class="d-flex justify-content-between align-items-center">
-                  <span class="fw-bold">{{ $room->RoomPrice }}/night</span>
+                  <span class="fw-bold">₱{{ $room->RoomPrice }}/night</span>
                   <a href="booking.php" class="btn btn-primary">Book Now</a>
                 </div>
               </div>

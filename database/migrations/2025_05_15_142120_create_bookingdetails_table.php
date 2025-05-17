@@ -16,12 +16,14 @@ return new class extends Migration {
       $table->dateTime('CheckInDate');
       $table->dateTime('CheckOutDate');
       $table->integer('NumberOfGuests');
+      $table->integer('RoomSize');
       // $table->decimal('SubTotal', 8, 2);
       $table->enum('BookingStatus', ['Pending', 'Confirmed', 'Cancelled'])->default('Pending');
       $table->timestamps();
 
       $table->foreign('UserID')->references('ID')->on('Users')->onDelete('cascade');
       $table->foreign('RoomID')->references('ID')->on('Rooms')->onDelete('cascade');
+      $table->foreign('RoomSize')->references('ID')->on('RoomSizes')->onDelete('cascade');
     });
   }
 
