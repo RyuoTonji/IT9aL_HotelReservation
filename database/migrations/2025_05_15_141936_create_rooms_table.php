@@ -13,14 +13,13 @@ return new class extends Migration {
       $table->id('ID');
       $table->string('RoomName')->unique();
       $table->text('RoomDescription')->nullable();
-      $table->enum('RoomType', ['Standard', 'Executive', 'Deluxe'])->default('Standard');
+      // $table->enum('RoomType', ['Standard', 'Executive', 'Deluxe'])->default('Standard');
       $table->integer('RoomCapacity')->default(1);
       $table->decimal('RoomPrice', 20, 2);
       $table->string('ImagePathname')->nullable();
       $table->string('ImageName')->nullable();
       $table->string('MimeType')->nullable();
       $table->timestamps();
-
     });
   }
 

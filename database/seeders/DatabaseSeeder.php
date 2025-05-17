@@ -97,7 +97,7 @@ class DatabaseSeeder extends Seeder {
       [
         'RoomName' => 'Standard Room',
         'RoomDescription' => 'A cozy room with basic amenities.',
-        'RoomTypeID' => 1,
+        // 'RoomType' => 1,
         'RoomPrice' => 50000.00,
         'RoomCapacity' => 1,
         'ImagePathname' => 'img/rooms/RoomStandard.png',
@@ -106,9 +106,9 @@ class DatabaseSeeder extends Seeder {
         'updated_at' => Carbon::now(),
       ],
       [
-        'RoomName' => 'Superior Room',
+        'RoomName' => 'Executive Room',
         'RoomDescription' => 'A superior room with premium amenities.',
-        'RoomTypeID' => 2,
+        // 'RoomTypeID' => 2,
         'RoomPrice' => 100000.00,
         'RoomCapacity' => 2,
         'ImagePathname' => 'img/rooms/RoomSuperior.jpg',
@@ -119,7 +119,7 @@ class DatabaseSeeder extends Seeder {
       [
         'RoomName' => 'Deluxe Room',
         'RoomDescription' => 'A luxurious room with top-notch facilities.',
-        'RoomTypeID' => 3,
+        // 'RoomTypeID' => 3,
         'RoomPrice' => 999999.00,
         'RoomCapacity' => 2,
         'ImagePathname' => 'img/rooms/RoomDeluxe.png',

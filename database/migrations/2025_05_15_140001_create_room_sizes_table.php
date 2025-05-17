@@ -13,7 +13,7 @@ return new class extends Migration {
       $table->id('ID');
       $table->string('RoomSizeName')->unique();
       $table->text('RoomSizeDescription')->nullable();
-      $table->integer('RoomSizeCapacity');
+      $table->integer('RoomCapacity');
       $table->decimal('PricePerPerson', 20, 2);
       $table->decimal('RoomSizePrice', 20, 2);
       $table->timestamps();
