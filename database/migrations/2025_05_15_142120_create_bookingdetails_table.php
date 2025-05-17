@@ -9,8 +9,8 @@ return new class extends Migration {
    * Run the migrations.
    */
   public function up(): void {
-    Schema::create('bookingdetails', function (Blueprint $table) {
-      $table->id('BookingDetailID');
+    Schema::create('BookingDetails', function (Blueprint $table) {
+      $table->id('ID');
       $table->unsignedBigInteger('UserID');
       $table->unsignedBigInteger('RoomID');
       $table->dateTime('CheckInDate');
@@ -20,8 +20,8 @@ return new class extends Migration {
       $table->enum('BookingStatus', ['Pending', 'Confirmed', 'Cancelled'])->default('Pending');
       $table->timestamps();
 
-      $table->foreign('UserID')->references('id')->on('users')->onDelete('cascade');
-      $table->foreign('RoomID')->references('RoomID')->on('rooms')->onDelete('cascade');
+      $table->foreign('UserID')->references('ID')->on('Users')->onDelete('cascade');
+      $table->foreign('RoomID')->references('ID')->on('Rooms')->onDelete('cascade');
     });
   }
 

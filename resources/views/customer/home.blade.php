@@ -104,7 +104,7 @@
                   <span class="fw-bold">₱{{ $room->RoomPrice }}/night</span>
                   <!-- Modified: Change link to button that triggers modal -->
                   @auth
-                    <form action="{{ route('checkout', $room->RoomID) }}" method="GET">
+                    <form action="{{ route('checkout', $room->ID) }}" method="GET">
                       <button class="btn btn-primary room-book-btn">Book Now</button>
                     </form>
                   @else

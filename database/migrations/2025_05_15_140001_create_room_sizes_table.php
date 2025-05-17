@@ -9,13 +9,14 @@ return new class extends Migration {
    * Run the migrations.
    */
   public function up(): void {
-    Schema::create('ServicesAddedOnBookings', function (Blueprint $table) {
+    Schema::create('RoomSizes', function (Blueprint $table) {
       $table->id('ID');
-      $table->unsignedBigInteger('BookingDetailID');
-      $table->unsignedBigInteger('ServiceID');
+      $table->string('RoomSizeName')->unique();
+      $table->text('RoomSizeDescription')->nullable();
+      $table->integer('RoomSizeCapacity');
+      $table->decimal('PricePerPerson', 20, 2);
+      $table->decimal('RoomSizePrice', 20, 2);
       $table->timestamps();
-
-      $table->foreign('BookingDetailID')->references('ID')->on('BookingDetails')->onDelete('cascade');
     });
   }
 
@@ -23,6 +24,6 @@ return new class extends Migration {
    * Reverse the migrations.
    */
   public function down(): void {
-    Schema::dropIfExists('servicesaddedonbookings');
+    Schema::dropIfExists('RoomSizes');
   }
 };

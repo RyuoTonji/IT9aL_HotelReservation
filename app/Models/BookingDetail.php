@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class BookingDetail extends Model {
   protected $table = 'bookingdetails';
 
-  protected $primaryKey = 'BookingDetailID';
+  protected $primaryKey = 'ID';
 
   protected $fillable = [
     'UserID',
@@ -28,18 +28,18 @@ class BookingDetail extends Model {
   ];
 
   public function user(): BelongsTo {
-    return $this->belongsTo(User::class, 'UserID', 'id');
+    return $this->belongsTo(User::class, 'UserID', 'ID');
   }
 
   public function room(): BelongsTo {
-    return $this->belongsTo(Room::class, 'RoomID', 'RoomID');
+    return $this->belongsTo(Room::class, 'RoomID', 'ID');
   }
 
   public function servicesAdded(): HasMany {
-    return $this->hasMany(ServicesAddedOnBooking::class, 'BookingDetailID', 'BookingDetailID');
+    return $this->hasMany(ServicesAddedOnBooking::class, 'ID', 'ID');
   }
 
   public function paymentInfo(): HasOne {
-    return $this->hasOne(PaymentInfo::class, 'BookingDetailID', 'BookingDetailID');
+    return $this->hasOne(PaymentInfo::class, 'ID', 'ID');
   }
 }

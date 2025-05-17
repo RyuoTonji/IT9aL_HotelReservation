@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
-use App\Http\Middleware\RestrictByRole;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/explore', [PageController::class, 'explore'])->name('explore');

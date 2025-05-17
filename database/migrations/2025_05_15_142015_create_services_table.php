@@ -10,7 +10,7 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('Services', function (Blueprint $table) {
-      $table->id('ServiceID');
+      $table->id('ID');
       $table->string('ServiceName')->unique();
       $table->text('ServiceDescription')->nullable();
       $table->decimal('ServicePrice', 20, 2);
@@ -26,6 +26,6 @@ return new class extends Migration {
    * Reverse the migrations.
    */
   public function down(): void {
-    Schema::dropIfExists('services');
+    Schema::dropIfExists('Services');
   }
 };

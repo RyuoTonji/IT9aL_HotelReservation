@@ -72,7 +72,7 @@
                   <button type="submit" class="btn btn-outline" id="AuthBtn" data-form="login"><i
                       class="bi bi-person-circle"></i>
                     {{ Auth::user()->Role === 'Admin' ? '[ADMIN]' : '' }}
-                    {{ Auth::user()->name ? '(' . Auth::user()->name . ')' : '' }}
+                    {{ Auth::user()->Name ? '(' . Auth::user()->Name . ')' : '' }}
                     {{ Auth::user()->email }}</button>
                 </form>
               @else

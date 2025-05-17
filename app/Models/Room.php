@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Room extends Model {
   protected $table = 'Rooms';
 
-  protected $primaryKey = 'RoomID';
+  protected $primaryKey = 'ID';
 
   protected $fillable = [
     'RoomName',
@@ -27,6 +27,6 @@ class Room extends Model {
   ];
 
   public function bookingDetails(): HasMany {
-    return $this->hasMany(BookingDetail::class, 'RoomID', 'RoomID');
+    return $this->hasMany(BookingDetail::class, 'ID', 'ID');
   }
 }

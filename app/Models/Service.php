@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Service extends Model {
   protected $table = 'Services';
 
-  protected $primaryKey = 'ServiceID';
+  protected $primaryKey = 'ID';
 
   protected $fillable = [
     'ServiceName',
@@ -26,6 +26,6 @@ class Service extends Model {
   ];
 
   public function servicesAdded(): HasMany {
-    return $this->hasMany(ServicesAddedOnBooking::class, 'ServiceID', 'ServiceID');
+    return $this->hasMany(ServicesAddedOnBooking::class, 'ID', 'ID');
   }
 }

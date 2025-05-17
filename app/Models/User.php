@@ -17,11 +17,13 @@ class User extends Authenticatable {
    *
    * @var list<string>
    */
+
+  // protected $primaryKey = 'ID';
   protected $fillable = [
-    'name',
+    'Name',
+    'Username',
     'email',
     'password',
-    'username',
     'Role',
   ];
 
@@ -48,6 +50,6 @@ class User extends Authenticatable {
   }
 
   public function bookingDetails(): HasMany {
-    return $this->hasMany(BookingDetail::class, 'UserID', 'id');
+    return $this->hasMany(BookingDetail::class, 'ID', 'id');
   }
 }

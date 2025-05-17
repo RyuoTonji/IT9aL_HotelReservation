@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ServicesAddedOnBooking extends Model {
   protected $table = 'ServicesAddedOnBookings';
 
-  protected $primaryKey = 'ServiceAddedID';
+  protected $primaryKey = 'ID';
 
   protected $fillable = [
     'BookingDetailID',
@@ -16,10 +16,10 @@ class ServicesAddedOnBooking extends Model {
   ];
 
   public function bookingDetail(): BelongsTo {
-    return $this->belongsTo(BookingDetail::class, 'BookingDetailID', 'BookingDetailID');
+    return $this->belongsTo(BookingDetail::class, 'BookingDetailID', 'ID');
   }
 
   public function service(): BelongsTo {
-    return $this->belongsTo(Service::class, 'ServiceID', 'ServiceID');
+    return $this->belongsTo(Service::class, 'ServiceID', 'ID');
   }
 }

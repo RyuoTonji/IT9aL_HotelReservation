@@ -10,16 +10,17 @@ return new class extends Migration {
    */
   public function up(): void {
     Schema::create('Rooms', function (Blueprint $table) {
-      $table->id('RoomID');
+      $table->id('ID');
       $table->string('RoomName')->unique();
       $table->text('RoomDescription')->nullable();
-      $table->string('RoomType')->default('Standard');
-      $table->decimal('RoomPrice', 20, 2);
+      $table->enum('RoomType', ['Standard', 'Executive', 'Deluxe'])->default('Standard');
       $table->integer('RoomCapacity')->default(1);
+      $table->decimal('RoomPrice', 20, 2);
       $table->string('ImagePathname')->nullable();
       $table->string('ImageName')->nullable();
       $table->string('MimeType')->nullable();
       $table->timestamps();
+
     });
   }
 
@@ -27,6 +28,6 @@ return new class extends Migration {
    * Reverse the migrations.
    */
   public function down(): void {
-    Schema::dropIfExists('rooms');
+    Schema::dropIfExists('Rooms');
   }
 };
