@@ -12,7 +12,6 @@ class AdminController extends Controller {
   }
 
   public function Dashboard() {
-    $this->AdminCheck();
     return view('admin.dashboard', ['title' => 'Dashboard']);
   }
 

@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RestrictByRole {
   /**
@@ -15,11 +16,13 @@ class RestrictByRole {
    */
   public function handle(Request $request, Closure $next, ...$roles): Response {
     if (!Auth::check()) {
-      abort(403, 'Unauthorized action.');
+      return redirect()->route('home')->with(['toast_error' => 'You must login first.']);
+      // abort(403, 'Unauthorized action.');
     }
-    $userRole = Auth::user()->role;
-    if ($userRole !== 'Admin' && !in_array($userRole, $roles)) {
-      abort(403, 'Unauthorized action.');
+
+    if (Auth::user()->Role !== 'Admin' && !in_array(Auth::user()->Role, $roles)) {
+      return redirect()->route('home')->with(['toast_error' => 'Unauthorized action.']);
+      // abort(403, 'Unauthorized action.');
     }
     return $next($request);
   }

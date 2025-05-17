@@ -32,7 +32,6 @@ class PageController extends Controller {
   }
 
   public function checkout($RoomID) {
-    $this->AccessCheck();
     return view('customer.checkout', ['title' => 'Checkout'], ['Room' => Room::findOrFail($RoomID)]);
   }
 

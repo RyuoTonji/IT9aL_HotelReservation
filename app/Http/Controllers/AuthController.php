@@ -48,3 +48,4 @@ class AuthController extends Controller {
     return redirect()->route('home')->with('toast_success', 'Logout successful!');
   }
 }
+
