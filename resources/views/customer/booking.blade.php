@@ -154,8 +154,9 @@
           <select class="form-control" id="roomType" name="RoomType" required>
             <option value="" disabled {{ old('RoomType') ? '' : 'selected' }}>Select Room Type</option>
             @forelse ($RoomTypes as $roomType)
-              <option value="{{ $roomType->RoomName }}" {{ old('RoomType') == $roomType->RoomName ? 'selected' : '' }}>
-                {{ $roomType->RoomName }} Room</option>
+              <option value="{{ $roomType->RoomTypeName }}"
+                {{ old('RoomType') == $roomType->RoomTypeName ? 'selected' : '' }}>
+                {{ $roomType->RoomTypeName }} Room</option>
             @empty
               <option value="" disabled selected>No Room Types Available</option>
             @endforelse
@@ -170,7 +171,7 @@
           <label for="roomType">Room Size</label>
           <select class="form-control" id="roomType" name="RoomSize" required>
             <option value="" disabled {{ old('RoomSize') ? '' : 'selected' }}>Select Room Size</option>
-            @forelse ($roomSizes as $roomSize)
+            @forelse ($RoomSizes as $roomSize)
               <option value="{{ $roomSize->RoomSizeName }}"
                 {{ old('RoomSize') == $roomSize->RoomSizeName ? 'selected' : '' }}>
                 {{ $roomSize->RoomSizeName }}</option>

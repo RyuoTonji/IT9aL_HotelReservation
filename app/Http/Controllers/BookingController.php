@@ -35,8 +35,8 @@ class BookingController extends Controller {
     $booking->UserID = Auth::id();
     $booking->CheckInDate = $request->CheckInDate;
     $booking->CheckOutDate = $request->CheckOutDate;
-    $booking->RoomID = Room::where('RoomName', $request->RoomType)->first()->ID;
-    $booking->RoomSize = RoomSizeType::where('RoomSizeName', $request->RoomSize)->first()->ID;
+    $booking->RoomTypeID = Room::where('RoomTypeName', $request->RoomType)->first()->ID;
+    $booking->RoomSizeID = RoomSizeType::where('RoomSizeName', $request->RoomSize)->first()->ID;
     $booking->NumberOfGuests = $request->NumberOfGuests;
     // Set other fields as necessary
     $booking->save();

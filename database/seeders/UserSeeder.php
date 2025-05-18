@@ -18,14 +18,14 @@ class UserSeeder extends Seeder {
           'Name' => 'Black Manager',
           'Username' => 'Black Manager',
           'Email' => 'manager@black.com',
-          'Password' => bcrypt('password'), // password
+          'Password' => bcrypt('password'),
           'Role' => 'Admin',
         ],
         [
           'Name' => 'Default User',
           'Username' => 'defaultuser',
           'Email' => 'defaultuser@com',
-          'Password' => bcrypt('defaultuser'), // password
+          'Password' => bcrypt('password'),
           'Role' => 'Customer',
         ]
       ]

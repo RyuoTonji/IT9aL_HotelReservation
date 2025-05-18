@@ -16,7 +16,7 @@ return new class extends Migration {
       $table->dateTime('CheckInDate');
       $table->dateTime('CheckOutDate');
       $table->integer('NumberOfGuests');
-      $table->foreignId('RoomSize')->constrained('RoomSizeTypes', 'ID')->onDelete('cascade')->onUpdate('cascade');
+      $table->foreignId('RoomSizeID')->constrained('RoomSizeTypes', 'ID')->onDelete('cascade')->onUpdate('cascade');
       $table->enum('BookingStatus', ['Pending', 'Confirmed', 'Cancelled'])->default('Pending');
       $table->timestamps();
     });

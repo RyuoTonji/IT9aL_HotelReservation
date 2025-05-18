@@ -13,11 +13,11 @@ class Booking extends Model {
   protected $primaryKey = 'ID';
   protected $fillable = [
     'UserID',
-    'RoomID',
+    'RoomTypeID',
     'CheckInDate',
     'CheckOutDate',
     'NumberOfGuests',
-    'RoomSize',
+    'RoomSizeID',
     'BookingStatus',
   ];
   public $timestamps = true;
