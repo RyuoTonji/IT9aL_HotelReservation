@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Room;
-use App\Models\RoomSize;
+use App\Models\RoomSizeType;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceAdded;
 
@@ -15,7 +15,7 @@ class BookingController extends Controller {
     //   return back()->with('toast_error', 'You already have a pending booking.');
     // }
 
-    $roomSize = RoomSize::where('RoomSizeName', $request->RoomSize)->firstOrFail();
+    $roomSize = RoomSizeType::where('RoomSizeName', $request->RoomSize)->firstOrFail();
     $maxGuests = $roomSize->RoomCapacity;
 
     $request->validate([
@@ -36,7 +36,7 @@ class BookingController extends Controller {
     $booking->CheckInDate = $request->CheckInDate;
     $booking->CheckOutDate = $request->CheckOutDate;
     $booking->RoomID = Room::where('RoomName', $request->RoomType)->first()->ID;
-    $booking->RoomSize = RoomSize::where('RoomSizeName', $request->RoomSize)->first()->ID;
+    $booking->RoomSize = RoomSizeType::where('RoomSizeName', $request->RoomSize)->first()->ID;
     $booking->NumberOfGuests = $request->NumberOfGuests;
     // Set other fields as necessary
     $booking->save();

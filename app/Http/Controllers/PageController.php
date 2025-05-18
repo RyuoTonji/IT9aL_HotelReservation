@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
-use App\Models\RoomSize;
+use App\Models\RoomSizeType;
 
 class PageController extends Controller {
   public function home() {
@@ -33,9 +33,8 @@ class PageController extends Controller {
       'customer.booking',
       ['title' => 'Booking'],
       [
-        'roomSizes' => RoomSize::get(),
+        'RoomSizes' => RoomSizeType::get(),
         'RoomTypes' => Room::get(),
-        'RoomSize' => RoomSize::get(),
         'Services' => Service::where('ServiceStatus', 'Available')->get(),
       ]
     );

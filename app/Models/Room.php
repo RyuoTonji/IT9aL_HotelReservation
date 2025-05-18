@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Room extends Model {
-  protected $table = 'Rooms';
+  protected $table = 'RoomTypes';
 
   protected $primaryKey = 'ID';
 
   protected $fillable = [
-    'RoomName',
+    'RoomTypeName',
     'RoomDescription',
     'RoomPrice',
     'RoomCapacity',

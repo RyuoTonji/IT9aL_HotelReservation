@@ -30,7 +30,7 @@ class Booking extends Model {
   }
 
   public function servicesAdded(): HasMany {
-    return $this->hasMany(ServicesAddedOnBooking::class, 'ID', 'ID');
+    return $this->hasMany(ServiceAdded::class, 'ID', 'ID');
   }
 
   public function paymentInfo(): HasOne {

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceAdded extends Model {
-  protected $table = 'ServicesAddedOnBookings';
+  protected $table = 'ServicesAdded';
   protected $fillable = ['BookingDetailID', 'ServiceID'];
 
   public function bookingDetail() {

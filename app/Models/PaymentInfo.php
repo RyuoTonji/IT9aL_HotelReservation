@@ -20,9 +20,22 @@ class PaymentInfo extends Model {
   protected $casts = [
     'TotalAmount' => 'decimal:2',
     'PaymentStatus' => 'string', // Enum: Pending, Completed, Failed
+    'PaymentMethod' => 'string', // Enum: CreditCard, PayPal, BankTransfer
   ];
 
-  public function bookingDetail(): BelongsTo {
-    return $this->belongsTo(BookingDetail::class, 'BookingDetailID', 'ID');
+  public function bookingDetail() {
+    return $this->belongsTo(BookingDetail::class, 'BookingDetailID');
+  }
+
+  public function cashPayment() {
+    return $this->hasOne(PaymentType_Cash::class, 'PaymentInfoID');
+  }
+
+  public function cardPayment() {
+    return $this->hasOne(PaymentType_Card::class, 'PaymentInfoID');
+  }
+
+  public function gcashPayment() {
+    return $this->hasOne(PaymentType_GCash::class, 'PaymentInfoID');
   }
 }
