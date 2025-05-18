@@ -153,9 +153,13 @@
           <label for="roomType">Room Type</label>
           <select class="form-control" id="roomType" name="RoomType" required>
             <option value="" disabled {{ old('RoomType') ? '' : 'selected' }}>Select Room Type</option>
-            <option value="Standard" {{ old('RoomType') == 'Standard' ? 'selected' : '' }}>Standard Room</option>
-            <option value="Executive" {{ old('RoomType') == 'Executive' ? 'selected' : '' }}">Executive Room</option>
-            <option value="Deluxe" {{ old('RoomType') == 'Deluxe' ? 'selected' : '' }}>Deluxe Room</option>
+            @forelse ($RoomTypes as $roomType)
+              <option value="{{ $roomType->RoomName }}" {{ old('RoomType') == $roomType->RoomName ? 'selected' : '' }}>
+                {{ $roomType->RoomName }} Room</option>
+            @empty
+              <option value="" disabled selected>No Room Types Available</option>
+            @endforelse
+
           </select>
           @error('RoomType')
             <div class="alert alert-danger mt-2">{{ $message }}</div>
@@ -166,9 +170,13 @@
           <label for="roomType">Room Size</label>
           <select class="form-control" id="roomType" name="RoomSize" required>
             <option value="" disabled {{ old('RoomSize') ? '' : 'selected' }}>Select Room Size</option>
-            <option value="Single" {{ old('RoomSize') == 'Single' ? 'selected' : '' }}>Single</option>
-            <option value="Double" {{ old('RoomSize') == 'Double' ? 'selected' : '' }}>Double</option>
-            <option value="Family" {{ old('RoomSize') == 'Family' ? 'selected' : '' }}>Family</option>
+            @forelse ($roomSizes as $roomSize)
+              <option value="{{ $roomSize->RoomSizeName }}"
+                {{ old('RoomSize') == $roomSize->RoomSizeName ? 'selected' : '' }}>
+                {{ $roomSize->RoomSizeName }}</option>
+            @empty
+              <option value="" disabled selected>No Room Sizes Available</option>
+            @endforelse
           </select>
           @error('RoomSize')
             <div class="alert alert-danger mt-2">{{ $message }}</div>
@@ -184,14 +192,21 @@
           @enderror
         </div>
 
-        {{-- <div class="form-group">
-          <label for="guests">Number of Guests</label>
-          <input type="number" class="form-control" id="guests" min="1" name="NumberOfGuests"
-            value={{ old('NumberOfGuests') }} required>
-          @error('NumberOfGuests')
-            <div class="alert alert-danger mt-2">{{ $message }}</div>
+        <div class="form-group services-ticklist d-flex flex-column mb-2">
+          <label>Additional Services (Optional)</label>
+          @forelse ($Services as $service)
+            <label>
+              <input type="checkbox" name="Services[]" value="{{ $service->ID }}"
+                {{ in_array($service->ID, old('Services', [])) ? 'checked' : '' }}>
+              {{ $service->ServiceName }} (₱{{ number_format($service->ServicePrice, 2) }})
+            </label>
+          @empty
+            <p>No additional services available.</p>
+          @endforelse
+          @error('Services')
+            <div class="invalid-feedback d-block">{{ $message }}</div>
           @enderror
-        </div> --}}
+        </div>
 
         <div class="text-center">
           <button type="submit" class="btn btn-confirm">Confirm

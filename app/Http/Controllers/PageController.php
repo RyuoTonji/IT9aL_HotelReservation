@@ -29,11 +29,24 @@ class PageController extends Controller {
   }
 
   public function booking() {
-    return view('customer.booking', ['title' => 'Booking', ['roomSizes' => RoomSize::get()]]);
+    return view(
+      'customer.booking',
+      ['title' => 'Booking'],
+      [
+        'roomSizes' => RoomSize::get(),
+        'RoomTypes' => Room::get(),
+        'RoomSize' => RoomSize::get(),
+        'Services' => Service::where('ServiceStatus', 'Available')->get(),
+      ]
+    );
   }
 
   public function checkout($RoomID) {
-    return view('customer.checkout', ['title' => 'Checkout'], ['Room' => Room::findOrFail($RoomID)]);
+    return view(
+      'customer.checkout',
+      ['title' => 'Checkout'],
+      ['Room' => Room::findOrFail($RoomID)]
+    );
   }
 
   private function AccessCheck() {
