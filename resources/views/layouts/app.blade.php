@@ -99,13 +99,13 @@
             <div id="loginForm">
               <form action="{{ route('login') }}" method="POST">
                 @csrf
-                <input type="email" class="modal-input @error('email') is-invalid @enderror" placeholder="email"
+                <input type="email" class="modal-input @error('email') is-invalid @enderror" placeholder="Email"
                   name="email" value="{{ old('email') }}" required>
                 @error('email')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
                 <input type="password" class="modal-input @error('password') is-invalid @enderror"
-                  placeholder="password" name="password" required>
+                  placeholder="Password" name="password" required>
                 @error('password')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -115,9 +115,16 @@
             <div id="signupForm" style="display: none;">
               <form action="{{ route('register') }}" method="POST">
                 @csrf
-                <input type="text" class="modal-input" placeholder="Username" name="username"
-                  value="{{ old('username') }}" required>
-                @error('username', 'register')
+                <input type="text" class="modal-input" placeholder="Name" name="Name"
+                  value="{{ old('Name') }}" required>
+                @error('Name', 'register')
+                  <div class="text-danger ms-2">
+                    {{ $message }}
+                  </div>
+                @enderror
+                <input type="text" class="modal-input" placeholder="Username" name="Username"
+                  value="{{ old('Username') }}" required>
+                @error('Username', 'register')
                   <div class="text-danger ms-2">
                     {{ $message }}
                   </div>

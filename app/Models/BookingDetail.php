@@ -15,10 +15,6 @@ class BookingDetail extends Model {
   protected $fillable = [
     'UserID',
     'RoomTypeID',
-    'CheckInDate',
-    'CheckOutDate',
-    'NumberOfGuests',
-    'BookingStatus',
   ];
 
   protected $casts = [

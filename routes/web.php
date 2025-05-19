@@ -5,6 +5,8 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CheckoutController;
+use App\Models\Booking;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/explore', [PageController::class, 'explore'])->name('explore');
@@ -18,8 +20,11 @@ Route::post('/login', [AuthController::class, 'LoginUser'])->name('login');
 Route::post('/logout', [AuthController::class, 'LogoutUser'])->name('logout');
 
 Route::middleware('RestrictByRole:Customer,Cashier')->group(function () {
-  Route::get('/room/{RoomID}/checkout', [PageController::class, 'checkout'])->name('checkout');
+  // Route::get('/room/{RoomID}/checkout', [PageController::class, 'checkout'])->name('checkout');
+  Route::get('/booking/details', [PageController::class, 'BookingDetails'])->name('booking.details');
   Route::post('/booking', [BookingController::class, 'AppendBooking'])->name('append.booking');
+  Route::post('/booking/checkout', [CheckoutController::class, 'CheckoutForm'])->name('checkout.process');
+  Route::post('/booking/{BookingID}/cancel', [BookingController::class, 'CancelBooking'])->name('cancel.booking');
 });
 
 Route::prefix('/admin')->middleware('RestrictByRole:Admin')->group(function () {

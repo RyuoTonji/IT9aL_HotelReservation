@@ -122,6 +122,15 @@
   <div class="booking-container">
     <div class="booking-content">
       <h2>Book Your Stay</h2>
+      @if ($HasPendingBooking)
+        <div class="col-span mb-3">
+          <div class="text-center col-span">
+            <div class="invalid-feedback d-block">You currently have a pending booking!</div>
+            <a href="{{ route('booking.details') }}" class="btn btn-confirm">Check Pending Booking</a>
+          </div>
+        </div>
+      @endif
+
       <form action="{{ route('append.booking') }}" method="POST">
         @csrf
 
@@ -129,7 +138,7 @@
           <label for="checkIn">Check-In Date</label>
           <div class="position-relative">
             <input type="date" class="form-control" id="checkIn" placeholder="mm/dd/yyyy" name="CheckInDate"
-              value="{{ old('CheckInDate') }}" required>
+              value="{{ old('CheckInDate') }}" required @if ($HasPendingBooking) disabled @endif>
             <i class="bi position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"></i>
           </div>
           @error('CheckInDate')
@@ -141,7 +150,7 @@
           <label for="checkOut">Check-Out Date</label>
           <div class="position-relative">
             <input type="date" class="form-control" id="checkOut" placeholder="mm/dd/yyyy" name="CheckOutDate"
-              value="{{ old('CheckOutDate') }}" required>
+              value="{{ old('CheckOutDate') }}" required @if ($HasPendingBooking) disabled @endif>
             <i class="bi position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"></i>
           </div>
           @error('CheckOutDate')
@@ -151,7 +160,8 @@
 
         <div class="form-group">
           <label for="roomType">Room Type</label>
-          <select class="form-control" id="roomType" name="RoomType" required>
+          <select class="form-control" id="roomType" name="RoomType" required
+            @if ($HasPendingBooking) disabled @endif>
             <option value="" disabled {{ old('RoomType') ? '' : 'selected' }}>Select Room Type</option>
             @forelse ($RoomTypes as $roomType)
               <option value="{{ $roomType->RoomTypeName }}"
@@ -169,10 +179,11 @@
 
         <div class="form-group">
           <label for="roomType">Room Size</label>
-          <select class="form-control" id="roomType" name="RoomSize" required>
+          <select class="form-control" id="RoomSize" name="RoomSize" required
+            @if ($HasPendingBooking) disabled @endif>
             <option value="" disabled {{ old('RoomSize') ? '' : 'selected' }}>Select Room Size</option>
             @forelse ($RoomSizes as $roomSize)
-              <option value="{{ $roomSize->RoomSizeName }}"
+              <option value="{{ $roomSize->RoomSizeName }}" data-capacity="{{ $roomSize->RoomCapacity }}""
                 {{ old('RoomSize') == $roomSize->RoomSizeName ? 'selected' : '' }}>
                 {{ $roomSize->RoomSizeName }}</option>
             @empty
@@ -184,10 +195,10 @@
           @enderror
         </div>
 
+        <label for="guests">Number of Guests</label>
         <div class="form-group">
-          <label for="guests">Number of Guests</label>
           <input type="number" class="form-control" id="guests" min="1" name="NumberOfGuests"
-            value={{ old('NumberOfGuests') }} required>
+            value={{ old('NumberOfGuests') }} required @if ($HasPendingBooking) disabled @endif>
           @error('NumberOfGuests')
             <div class="alert alert-danger mt-2">{{ $message }}</div>
           @enderror
@@ -198,7 +209,8 @@
           @forelse ($Services as $service)
             <label>
               <input type="checkbox" name="Services[]" value="{{ $service->ID }}"
-                {{ in_array($service->ID, old('Services', [])) ? 'checked' : '' }}>
+                {{ in_array($service->ID, old('Services', [])) ? 'checked' : '' }}
+                @if ($HasPendingBooking) disabled @endif>
               {{ $service->ServiceName }} (₱{{ number_format($service->ServicePrice, 2) }})
             </label>
           @empty
@@ -209,13 +221,14 @@
           @enderror
         </div>
 
-        <div class="text-center">
-          <button type="submit" class="btn btn-confirm">Confirm
-            Booking</button>
-          <button type="button" class="btn btn-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel
-            Booking</button>
-          <button type="button" class="btn btn-draft">Save Draft</button>
-        </div>
+        @if (!$HasPendingBooking)
+          <div class="text-center">
+            <button type="button" class="btn btn-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel
+              Booking</button>
+            <button type="submit" class="btn btn-confirm">Confirm
+              Booking</button>
+          </div>
+        @endif
 
       </form>
     </div>
@@ -255,16 +268,16 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const roomSizeSelect = document.getElementById('roomSize');
+      const roomSizeSelect = document.getElementById('RoomSize');
       const guestsInput = document.getElementById('guests');
 
       function updateGuestsMax() {
         const selectedOption = roomSizeSelect.options[roomSizeSelect.selectedIndex];
-        const maxGuests = selectedOption ? selectedOption.getAttribute('data-capacity') : 1;
-        guestsInput.max = maxGuests || 1; // Fallback to 1 if undefined
+        const maxGuests = selectedOption ? parseInt(selectedOption.getAttribute('data-capacity')) || 1 : 1;
+        guestsInput.max = maxGuests;
         // Reset guests input if current value exceeds new max
-        if (guestsInput.value > maxGuests) {
-          guestsInput.value = maxGuests;
+        if (parseInt(guestsInput.value) > maxGuests || !guestsInput.value) {
+          guestsInput.value = 1; // Default to 1 if invalid or empty
         }
       }
 

@@ -14,8 +14,8 @@ class RoomTypeSeeder extends Seeder {
     DB::table('RoomTypes')->insert([
       [
         'RoomTypeName' => 'Standard',
-        'RoomDescription' => 'A cozy room with basic amenities.',
-        // 'RoomType' => 1,
+        'RoomDescription'
+        => 'A cozy room with basic amenities.',
         'RoomPrice' => 50000.00,
         'RoomCapacity' => 1,
         'ImagePathname' => 'img/rooms/RoomStandard.png',
@@ -26,7 +26,6 @@ class RoomTypeSeeder extends Seeder {
       [
         'RoomTypeName' => 'Executive',
         'RoomDescription' => 'A superior room with premium amenities.',
-        // 'RoomTypeID' => 2,
         'RoomPrice' => 100000.00,
         'RoomCapacity' => 2,
         'ImagePathname' => 'img/rooms/RoomSuperior.jpg',
@@ -37,7 +36,6 @@ class RoomTypeSeeder extends Seeder {
       [
         'RoomTypeName' => 'Deluxe',
         'RoomDescription' => 'A luxurious room with top-notch facilities.',
-        // 'RoomTypeID' => 3,
         'RoomPrice' => 999999.00,
         'RoomCapacity' => 2,
         'ImagePathname' => 'img/rooms/RoomDeluxe.png',

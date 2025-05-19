@@ -10,14 +10,30 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller {
   public function RegisterUser(Request $request) {
     $request->validateWithBag('register', [
-      'username' => 'required|unique:users',
+      'Name' => 'required|regex:/^(?:[A-Za-z]+(?:\.[A-Za-z]+)?)(?: [A-Za-z]+){0,5}$/',
+      'Username' => 'required|unique:users|regex:/^[A-Za-z0-9]+(_[A-Za-z0-9]+)?(\.[A-Za-z0-9]+)?$/',
       'email' => 'required|email|unique:users',
       'password' => 'required|min:6|confirmed',
       'password_confirmation' => 'required|min:6',
+    ], [
+      'Name.required' => 'The name field is required.',
+      'Name.regex' => 'The name must only contains letters, an optional dot and up to 5 spaces.',
+      'Username.required' => 'The username field is required.',
+      'Username.unique' => 'This username is already taken.',
+      'Username.regex' => 'The username must contain only letters, numbers, one optional underscore, and one optional dot (e.g., "john_doe.123"). No spaces or other special characters are allowed.',
+      'email.required' => 'The email field is required.',
+      'email.email' => 'The email must be a valid email address.',
+      'email.unique' => 'This email is already registered.',
+      'password.required' => 'The password field is required.',
+      'password.min' => 'The password must be at least 6 characters.',
+      'password.confirmed' => 'The password confirmation does not match.',
+      'password_confirmation.required' => 'The password confirmation field is required.',
+      'password_confirmation.min' => 'The password confirmation must be at least 6 characters.',
     ]);
 
     User::create([
-      'username' => $request->username,
+      'Name' => ucwords($request->Name),
+      'Username' => $request->Username,
       'email' => $request->email,
       'password' => Hash::make($request->password),
     ]);
@@ -38,6 +54,9 @@ class AuthController extends Controller {
       ])->withInput($request->only('email'));
     }
 
+    if (Auth::user()->Role === 'Admin') {
+      return redirect()->route('admin.dashboard');
+    }
     return back()->with('toast_success', 'Login successful!');
   }
 

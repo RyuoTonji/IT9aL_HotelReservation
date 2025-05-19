@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BookingDetail;
 use App\Models\Room;
+use App\Models\Booking;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomSizeType;
+use Illuminate\Http\Request;
 
 class PageController extends Controller {
   public function home() {
@@ -36,8 +39,71 @@ class PageController extends Controller {
         'RoomSizes' => RoomSizeType::get(),
         'RoomTypes' => Room::get(),
         'Services' => Service::where('ServiceStatus', 'Available')->get(),
+        'HasPendingBooking' => Booking::where('UserID', Auth::id())
+          ->where('BookingStatus', 'Pending')
+          ->orderBy('created_at', 'desc')
+          ->first(),
       ]
     );
+  }
+
+  public function BookingDetails(Request $request) {
+    $this->AccessCheck();
+
+    $booking = null;
+    $totalAmount = session('TotalAmount');
+
+    // Try session BookingID first
+    $bookingID = session('BookingID');
+    if ($bookingID) {
+      $booking = Booking::with(['room', 'roomSize', 'services'])
+        ->where('ID', $bookingID)
+        ->where('UserID', Auth::id())
+        ->first();
+    }
+
+    // If no session booking, get latest pending booking
+    if (!$booking) {
+      $booking = Booking::with(['Room', 'RoomSize', 'Services'])
+        ->where('UserID', Auth::id())
+        ->where('BookingStatus', 'Pending')
+        ->orderBy('created_at', 'desc')
+        ->first();
+    }
+
+    // $bookingDetail = Booking::where('BookingID', $bookingID)->firstOrFail();
+
+    // Calculate costs
+    $roomPrice = $guestFee = $serviceCost = $subtotal = $discount = 0;
+    // dd($booking);
+    if ($booking) {
+      $roomPrice = $booking->Room->RoomPrice;
+      $guestFee = $booking->RoomSize->PricePerPerson * $booking->NumberOfGuests;
+      $serviceCost = $booking->Services->sum('ServicePrice');
+      $subtotal = $roomPrice + $guestFee + $serviceCost;
+      $userLoyalty = Auth::user()->loyalty;
+      if ($userLoyalty && $userLoyalty->LoyaltyTierID) {
+        $tier = $userLoyalty->loyaltyTier;
+        $discount = $subtotal * ($tier->Discount / 100);
+      }
+      $totalAmount ??= $subtotal - $discount;
+
+      $request->session()->put('bookingDetailID', $booking->ID);
+      $request->session()->put('totalAmount', $totalAmount);
+    }
+
+
+    return view('customer.bookingdetails', [
+      'title' => 'Booking Details',
+      'booking' => $booking,
+      'bookingDetail' => $booking, // Alias for compatibility
+      'roomPrice' => $roomPrice,
+      'guestFee' => $guestFee,
+      'serviceCost' => $serviceCost,
+      'subtotal' => $subtotal,
+      'discount' => $discount,
+      'totalAmount' => $totalAmount,
+    ]);
   }
 
   public function checkout($RoomID) {

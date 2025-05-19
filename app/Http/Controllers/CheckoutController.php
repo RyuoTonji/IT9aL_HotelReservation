@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\CashbackThreshold;
 use App\Models\PaymentInfo;
 use App\Models\PaymentType_Cash;
@@ -15,6 +16,73 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller {
+  public function CheckoutForm(Request $request) {
+    $bookingDetailID = $request->session()->get('bookingDetailID');
+    $totalAmount = $request->session()->get('totalAmount');
+
+    // dd($bookingDetailID, $totalAmount);
+
+    if (!$bookingDetailID || !$totalAmount) {
+      return redirect()->route('booking')->with('toast_error', 'No booking information available.');
+    }
+
+    $booking = Booking::with(['room', 'roomSize', 'services'])
+      ->where('ID', $bookingDetailID)
+      ->where('UserID', Auth::id())
+      ->where('BookingStatus', 'Pending')
+      ->first();
+
+    // dd($booking);
+
+    if (!$booking) {
+      return redirect()->route('booking')->with('toast_error', 'Invalid or completed booking.');
+    }
+
+    // dd($booking);
+
+    // Calculate costs
+    $roomPrice = $booking->room->RoomPrice;
+    $guestFee = $booking->roomSize->PricePerPerson * $booking->NumberOfGuests;
+    $serviceCost = $booking->services->sum('ServicePrice');
+    $subtotal = $roomPrice + $guestFee + $serviceCost;
+    $discount = 0;
+    $discountPercent = 0;
+    $userLoyalty = Auth::user()->Loyalty;
+
+    // dd($userLoyalty);
+
+    if ($userLoyalty && $userLoyalty->LoyaltyTierID) {
+      $tier = $userLoyalty->loyaltyTier;
+      $discountPercent = $tier->Discount;
+      $discount = $subtotal * ($tier->Discount / 100);
+    }
+    $totalAmount = $subtotal - $discount;
+
+    // Validate totalAmount matches
+    // if (abs($totalAmount - $totalAmount) > 0.01) {
+    //   return redirect()->route('booking.details')->with('toast_error', 'Invalid total amount.');
+    // }
+
+    // Calculate potential points
+    $potentialPoints = 0;
+    $cashback = CashbackThreshold::where('MinPaidAmount', '<=', $totalAmount)
+      ->orderBy('MinPaidAmount', 'desc')
+      ->first();
+
+    if ($cashback) {
+      $potentialPoints = $totalAmount * ($cashback->CashbackPercentile / 100);
+    }
+    // dd($booking, $subtotal, $discount, $discountPercent, $totalAmount, $potentialPoints);
+
+    return view('customer.checkout', [
+      'booking' => $booking,
+      'subtotal' => $subtotal,
+      'discount' => $discount,
+      'discountPercent' => $discountPercent,
+      'totalAmount' => $totalAmount,
+      'potentialPoints' => $potentialPoints,
+    ]);
+  }
   public function ProcessPayment(Request $request) {
     $request->validate([
       'BookingDetailID' => 'required|exists:BookingDetails,ID',

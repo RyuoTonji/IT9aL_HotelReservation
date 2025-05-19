@@ -21,19 +21,31 @@ class Booking extends Model {
     'BookingStatus',
   ];
   public $timestamps = true;
+  protected $casts = [
+    'CheckInDate' => 'date',
+    'CheckOutDate' => 'date',
+  ];
   public function user(): BelongsTo {
     return $this->belongsTo(User::class, 'UserID', 'ID');
   }
 
-  public function room(): BelongsTo {
-    return $this->belongsTo(Room::class, 'RoomID', 'ID');
+  public function Room(): BelongsTo {
+    return $this->belongsTo(Room::class, 'RoomTypeID', 'ID');
   }
 
-  public function servicesAdded(): HasMany {
-    return $this->hasMany(ServiceAdded::class, 'ID', 'ID');
+  public function RoomSize(): BelongsTo {
+    return $this->belongsTo(RoomSizeType::class, 'RoomSizeID', 'ID');
+  }
+
+  public function serviceAdded(): HasMany {
+    return $this->hasMany(ServiceAdded::class, 'BookingDetailID', 'ID');
+  }
+
+  public function Services() {
+    return $this->belongsToMany(Service::class, 'ServicesAdded', 'BookingDetailID', 'ServiceID');
   }
 
   public function paymentInfo(): HasOne {
-    return $this->hasOne(PaymentInfo::class, 'ID', 'ID');
+    return $this->hasOne(PaymentInfo::class, 'BookingDetailID', 'ID');
   }
 }

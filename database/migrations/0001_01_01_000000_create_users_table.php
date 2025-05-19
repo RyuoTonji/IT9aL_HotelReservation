@@ -13,7 +13,7 @@ return new class extends Migration {
       $table->id();
       $table->string('Name')->nullable();
       $table->string('Username')->unique();
-      $table->string('Role')->default('User');
+      $table->string('Role')->default('Customer');
       $table->string('email')->unique();
       $table->timestamp('email_verified_at')->nullable();
       $table->string('password');

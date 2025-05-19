@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class CashbackThreshold extends Model {
-  protected $table = 'CashbackThreshold';
+  protected $table = 'CashbackThresholds';
   protected $primaryKey = 'ID';
   protected $fillable = [
     'ThresholdName',
@@ -15,7 +15,7 @@ class CashbackThreshold extends Model {
   ];
 
   protected $casts = [
-    'MinPaidAmount' => 'integer',
-    'CashbackPercentile' => 'decimal'
+    'MinPaidAmount' => 'decimal:2',
+    'CashbackPercentile' => 'decimal:2'
   ];
 }
