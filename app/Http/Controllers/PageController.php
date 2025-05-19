@@ -6,6 +6,7 @@ use App\Models\BookingDetail;
 use App\Models\Room;
 use App\Models\Booking;
 use App\Models\Service;
+use App\Models\PaymentInfo;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomSizeType;
 use Illuminate\Http\Request;
@@ -92,7 +93,6 @@ class PageController extends Controller {
       $request->session()->put('totalAmount', $totalAmount);
     }
 
-
     return view('customer.bookingdetails', [
       'title' => 'Booking Details',
       'booking' => $booking,
@@ -103,6 +103,7 @@ class PageController extends Controller {
       'subtotal' => $subtotal,
       'discount' => $discount,
       'totalAmount' => $totalAmount,
+      'PaymentProcessed' => PaymentInfo::where('BookingDetailID', $request->session()->get('bookingDetailID'))->where('PaymentStatus', 'Completed')->first(),
     ]);
   }
 

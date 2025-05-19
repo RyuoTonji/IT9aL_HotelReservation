@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentType_GCash extends Model {
   protected $table = 'PaymentType_GCash';
-  protected $fillable = ['PaymentInfoID', 'Name', 'Number', 'Amount', 'Receipt'];
+  protected $fillable = ['PaymentInfoID', 'Name', 'Number', 'Amount', 'ReceiptNumber'];
 
   protected $casts = [
     'Amount' => 'decimal:2',

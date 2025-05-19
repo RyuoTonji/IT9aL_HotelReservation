@@ -11,9 +11,10 @@ use App\Models\PaymentType_GCash;
 use App\Models\LoyaltyPointTransaction;
 use App\Models\LoyaltyTier;
 use App\Models\UserLoyalty;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller {
   public function CheckoutForm(Request $request) {
@@ -84,20 +85,35 @@ class CheckoutController extends Controller {
     ]);
   }
   public function ProcessPayment(Request $request) {
-    $request->validate([
+    $bookingDetailID = $request->session()->get('bookingDetailID');
+    $totalAmount = $request->session()->get('totalAmount');
+
+    $rules = [
       'BookingDetailID' => 'required|exists:BookingDetails,ID',
       'TotalAmount' => 'required|numeric|min:0',
       'PaymentMethod' => 'required|in:Cash,Card,Gcash',
-      'Cash.Amount' => 'required_if:PaymentMethod,Cash|numeric|min:0',
-      'Card.Name' => 'required_if:PaymentMethod,Card|string|max:255',
-      'Card.CardNumber' => 'required_if:PaymentMethod,Card|string|regex:/^\d{16}$/',
-      'Card.Expiry' => 'required_if:PaymentMethod,Card|string|regex:/^\d{2}\/\d{2}$/',
-      'Card.CVC' => 'required_if:PaymentMethod,Card|string|regex:/^\d{3,4}$/',
-      'Gcash.Name' => 'required_if:PaymentMethod,Gcash|string|max:255',
-      'Gcash.Number' => 'required_if:PaymentMethod,Gcash|string|regex:/^09\d{9}$/',
-      'Gcash.Amount' => 'required_if:PaymentMethod,Gcash|numeric|min:0',
-      'Gcash.Receipt' => 'required_if:PaymentMethod,Gcash|string|max:255',
-    ]);
+    ];
+
+    if ($request->PaymentMethod === 'Cash') {
+      $rules['CashAmount'] = 'required|numeric|min:0';
+    } elseif ($request->PaymentMethod === 'Card') {
+      $rules['CardName'] = 'required|string|max:255';
+      $rules['CardCardNumber'] = 'required|string|regex:/^\d{16}$/';
+      $rules['CardExpiry'] = 'required|string|regex:/^\d{2}\/\d{2}$/';
+      $rules['CardCVC'] = 'required|string|regex:/^\d{3,4}$/';
+    } elseif ($request->PaymentMethod === 'Gcash') {
+      $rules['GcashName'] = 'required|string|max:255';
+      $rules['GcashNumber'] = 'required|string|regex:/^09\d{9}$/';
+      $rules['GcashAmount'] = 'required|numeric|min:0';
+      $rules['GcashReceipt'] = 'required|string|max:255';
+    }
+
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+      return back()
+        ->withErrors($validator)
+        ->withInput();
+    }
 
     DB::beginTransaction();
     try {
@@ -106,16 +122,16 @@ class CheckoutController extends Controller {
         ['LoyaltyPoints' => 0, 'LoyaltyTierID' => null]
       );
 
-      $totalAmount = $request->TotalAmount;
+      $totalAmount = $request->session()->get('totalAmount');
       if ($userLoyalty->LoyaltyTierID) {
         $tier = LoyaltyTier::find($userLoyalty->LoyaltyTierID);
         $discount = $tier->Discount / 100;
-        $totalAmount = $totalAmount * (1 - $discount);
+        $totalAmount *= 1 - $discount;
       }
 
       $paymentInfo = PaymentInfo::create([
-        'BookingDetailID' => $request->BookingDetailID,
-        'TotalAmount' => $request->TotalAmount,
+        'BookingDetailID' => $request->session()->get('bookingDetailID'),
+        'TotalAmount' => $request->session()->get('totalAmount'),
         'PaymentStatus' => 'Pending',
         'PaymentMethod' => $request->PaymentMethod,
       ]);
@@ -123,23 +139,23 @@ class CheckoutController extends Controller {
       if ($request->PaymentMethod === 'Cash') {
         PaymentType_Cash::create([
           'PaymentInfoID' => $paymentInfo->ID,
-          'Amount' => $request->input('Cash.Amount'),
+          'CashAmount' => $request->input('CashAmount'),
         ]);
       } elseif ($request->PaymentMethod === 'Card') {
         PaymentType_Card::create([
           'PaymentInfoID' => $paymentInfo->ID,
-          'Name' => $request->input('Card.Name'),
-          'CardNumber' => $request->input('Card.CardNumber'),
-          'Expiry' => $request->input('Card.Expiry'),
-          'CVC' => $request->input('Card.CVC'),
+          'Name' => $request->input('CardName'),
+          'CardNumber' => $request->input('CardNumber'),
+          'Expiry' => $request->input('CardExpiry'),
+          'CVC' => $request->input('CardCVC'),
         ]);
       } elseif ($request->PaymentMethod === 'Gcash') {
         PaymentType_GCash::create([
           'PaymentInfoID' => $paymentInfo->ID,
-          'Name' => $request->input('Gcash.Name'),
-          'Number' => $request->input('Gcash.Number'),
-          'Amount' => $request->input('Gcash.Amount'),
-          'Receipt' => $request->input('Gcash.Receipt'),
+          'Name' => $request->input('GcashName'),
+          'Number' => $request->input('GcashNumber'),
+          'Amount' => $request->input('GcashAmount'),
+          'ReceiptNumber' => $request->input('GcashReceipt'),
         ]);
       }
 
@@ -167,7 +183,7 @@ class CheckoutController extends Controller {
         $userLoyalty->update(['LoyaltyTierID' => $newTier->ID]);
       }
       // Update PaymentStatus based on processing (e.g., API call for Card/Gcash)
-      $paymentInfo->update(['PaymentStatus' => 'Completed']); // Example
+      $paymentInfo->update(['PaymentStatus' => 'Completed']); // Exampleche
 
       DB::commit();
       return redirect()->route('booking')->with('toast_success', 'Payment processed successfully!');

@@ -11,6 +11,6 @@ class LoyaltyTier extends Model {
 
   protected $casts = [
     'MinPoints' => 'integer',
-    'Discount' => 'decimal',
+    'Discount' => 'decimal:2',
   ];
 }

@@ -45,29 +45,49 @@
       font-weight: 600;
     }
 
-    .form-group label {
+    .detail-group {
+      margin-bottom: 20px;
+    }
+
+    .detail-group label {
       font-weight: 500;
       color: #333;
+      display: inline-block;
+      width: 150px;
     }
 
-    .form-control {
-      border: 2px solid #f8cb45;
-      border-radius: 25px;
+    .detail-group span {
+      color: #555;
+    }
+
+    .cost-table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    .cost-table th,
+    .cost-table td {
       padding: 10px;
-      margin-bottom: 15px;
-      font-family: "Poppins", sans-serif;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
 
-    .form-control:focus {
-      border-color: #e0b33d;
-      box-shadow: 0 0 5px rgba(248, 203, 69, 0.5);
+    .cost-table th {
+      background-color: #f8cb45;
+      color: #000;
+    }
+
+    .cost-table .total {
+      font-weight: 600;
+      color: #000;
     }
 
     .btn {
       border-radius: 25px;
       padding: 10px 20px;
       font-family: "Poppins", sans-serif;
-      margin: 5px;
+      margin: 10px;
     }
 
     .btn-confirm {
@@ -92,30 +112,10 @@
       border-color: #c82333;
     }
 
-    .btn-draft {
-      background-color: #6c757d;
-      border-color: #6c757d;
-      color: #fff;
-    }
-
-    .btn-draft:hover {
-      background-color: #5a6268;
-      border-color: #5a6268;
-    }
-
-    .modal-content {
-      border-radius: 15px;
-      font-family: "Poppins", sans-serif;
-    }
-
-    .modal-body {
+    .no-bookings {
       text-align: center;
-      padding: 30px;
-    }
-
-    .modal-footer {
-      justify-content: center;
-      border-top: none;
+      color: #555;
+      margin-top: 20px;
     }
   </style>
 
@@ -135,7 +135,7 @@
         </div>
         <div class="detail-group">
           <label>Room Type:</label>
-          <span>{{ $booking->room->RoomName }}</span>
+          <span>{{ $booking->room->RoomTypeName }}</span>
         </div>
         <div class="detail-group">
           <label>Room Size:</label>
@@ -190,17 +190,21 @@
           </tr>
         </table>
 
-        <div style="text-align: center; margin-top: 30px;">
-          <form action="{{ route('cancel.booking', $booking->ID) }}" method="POST" style="display: inline;">
-            @csrf
-            @method('POST')
-            <button type="submit" class="btn btn-cancel">Cancel Booking</button>
-          </form>
-          <form action="{{ route('checkout.process') }}" method="POST" style="display: inline;">
-            @csrf
-            <button type="submit" class="btn btn-confirm">Proceed to Payment</button>
-          </form>
-        </div>
+        @if (!$PaymentProcessed)
+          <div style="text-align: center; margin-top: 30px;">
+            <form action="{{ route('cancel.booking', $booking->ID) }}" method="POST" style="display: inline;">
+              @csrf
+              @method('POST')
+              <button type="submit" class="btn btn-cancel">Cancel Booking</button>
+            </form>
+            <form action="{{ route('checkout.form') }}" method="POST" style="display: inline;">
+              @csrf
+              <button type="submit" class="btn btn-confirm">Proceed to Payment</button>
+            </form>
+          </div>
+        @else
+          <div class="alert alert-warning mt-2">Your payment is being currently processed.</div>
+        @endif
       @else
         <div class="no-bookings">
           <p>You have no pending bookings.</p>

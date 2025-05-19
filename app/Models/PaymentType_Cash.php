@@ -8,7 +8,7 @@ class PaymentType_Cash extends Model {
   protected $table = 'PaymentType_Cash';
 
   protected $primaryKey = 'ID';
-  protected $fillable = ['PaymentInfoID', 'Amount'];
+  protected $fillable = ['PaymentInfoID', 'CashAmount'];
 
   protected $casts = [
     'Amount' => 'decimal:2',

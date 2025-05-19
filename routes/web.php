@@ -21,9 +21,11 @@ Route::post('/logout', [AuthController::class, 'LogoutUser'])->name('logout');
 
 Route::middleware('RestrictByRole:Customer,Cashier')->group(function () {
   // Route::get('/room/{RoomID}/checkout', [PageController::class, 'checkout'])->name('checkout');
-  Route::get('/booking/details', [PageController::class, 'BookingDetails'])->name('booking.details');
   Route::post('/booking', [BookingController::class, 'AppendBooking'])->name('append.booking');
-  Route::post('/booking/checkout', [CheckoutController::class, 'CheckoutForm'])->name('checkout.process');
+  Route::get('/booking/details', [PageController::class, 'BookingDetails'])->name('booking.details');
+  Route::get('/booking/checkout', [CheckoutController::class, 'CheckoutForm'])->name('checkout.form');
+  Route::post('/booking/checkout', [CheckoutController::class, 'CheckoutForm'])->name('checkout.form');
+  Route::post('/booking/process-payment', [CheckoutController::class, 'ProcessPayment'])->name('process.payment');
   Route::post('/booking/{BookingID}/cancel', [BookingController::class, 'CancelBooking'])->name('cancel.booking');
 });
 

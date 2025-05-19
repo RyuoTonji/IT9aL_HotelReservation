@@ -91,33 +91,37 @@
       border-color: #c82333;
     }
 
-    .btn-draft {
-      background-color: #6c757d;
-      border-color: #6c757d;
-      color: #fff;
+    .cost-table {
+      width: 100%;
+      margin: 20px 0;
+      border-collapse: collapse;
     }
 
-    .btn-draft:hover {
-      background-color: #5a6268;
-      border-color: #5a6268;
+    .cost-table th,
+    .cost-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
 
-    .modal-content {
-      border-radius: 15px;
-      font-family: "Poppins", sans-serif;
+    .cost-table th {
+      background-color: #f8cb45;
+      color: #000;
     }
 
-    .modal-body {
-      text-align: center;
-      padding: 30px;
+    .cost-table .total {
+      font-weight: 600;
+      color: #000;
     }
 
-    .modal-footer {
-      justify-content: center;
-      border-top: none;
+    .points-info {
+      color: #555;
+      margin: 15px 0;
     }
   </style>
-  
+
+  {{-- @dd($booking, route('process.payment')) --}}
+
   <div class="booking-container">
     <div class="booking-content">
       <h2>Payment Form</h2>
@@ -151,7 +155,7 @@
           <p class="points-info">No loyalty points will be earned for this payment.</p>
         @endif
 
-        <form action="{{ route('checkout.process') }}" method="POST">
+        <form id="paymentForm" action="{{ route('process.payment') }}" method="POST">
           @csrf
           <input type="hidden" name="BookingDetailID" value="{{ $booking->ID }}">
           <input type="hidden" name="TotalAmount" value="{{ $totalAmount }}">
@@ -172,9 +176,9 @@
           <!-- Cash Fields -->
           <div class="form-group payment-fields" id="cash-fields" style="display: none;">
             <label for="CashAmount">Amount</label>
-            <input type="number" class="form-control" id="CashAmount" name="Cash.Amount" step="0.01" min="0"
-              value="{{ old('Cash.Amount') }}">
-            @error('Cash.Amount')
+            <input type="number" class="form-control" id="CashAmount" name="CashAmount" step="0.01" min="0"
+              value="{{ old('CashAmount') }}">
+            @error('CashAmount')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
           </div>
@@ -182,28 +186,26 @@
           <!-- Card Fields -->
           <div class="form-group payment-fields" id="card-fields" style="display: none;">
             <label for="CardName">Name on Card</label>
-            <input type="text" class="form-control" id="CardName" name="Card.Name" value="{{ old('Card.Name') }}">
-            @error('Card.Name')
+            <input type="text" class="form-control" id="CardName" name="CardName" value="{{ old('CardName') }}">
+            @error('CardName')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
 
             <label for="CardNumber">Card Number</label>
-            <input type="text" class="form-control" id="CardNumber" name="Card.CardNumber"
-              value="{{ old('Card.CardNumber') }}">
-            @error('Card.CardNumber')
+            <input type="text" class="form-control" id="CardNumber" name="CardNumber" value="{{ old('CardNumber') }}">
+            @error('CardNumber')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
 
             <label for="CardExpiry">Expiry (MM/YY)</label>
-            <input type="text" class="form-control" id="CardExpiry" name="Card.Expiry"
-              value="{{ old('Card.Expiry') }}">
-            @error('Card.Expiry')
+            <input type="text" class="form-control" id="CardExpiry" name="CardExpiry" value="{{ old('CardExpiry') }}">
+            @error('CardExpiry')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
 
             <label for="CardCVC">CVC</label>
-            <input type="text" class="form-control" id="CardCVC" name="Card.CVC" value="{{ old('Card.CVC') }}">
-            @error('Card.CVC')
+            <input type="text" class="form-control" id="CardCVC" name="CardCVC" value="{{ old('CardCVC') }}">
+            @error('CardCVC')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
           </div>
@@ -211,29 +213,29 @@
           <!-- GCash Fields -->
           <div class="form-group payment-fields" id="gcash-fields" style="display: none;">
             <label for="GcashName">Name</label>
-            <input type="text" class="form-control" id="GcashName" name="Gcash.Name" value="{{ old('Gcash.Name') }}">
-            @error('Gcash.Name')
+            <input type="text" class="form-control" id="GcashName" name="GcashName" value="{{ old('GcashName') }}">
+            @error('GcashName')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
 
             <label for="GcashNumber">Mobile Number</label>
-            <input type="text" class="form-control" id="GcashNumber" name="Gcash.Number"
-              value="{{ old('Gcash.Number') }}">
-            @error('Gcash.Number')
+            <input type="text" class="form-control" id="GcashNumber" name="GcashNumber"
+              value="{{ old('GcashNumber') }}">
+            @error('GcashNumber')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
 
             <label for="GcashAmount">Amount</label>
-            <input type="number" class="form-control" id="GcashAmount" name="Gcash.Amount" step="0.01" min="0"
-              value="{{ old('Gcash.Amount') }}">
-            @error('Gcash.Amount')
+            <input type="number" class="form-control" id="GcashAmount" name="GcashAmount" step="0.01" min="0"
+              value="{{ old('GcashAmount') }}">
+            @error('GcashAmount')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
 
             <label for="GcashReceipt">Receipt/Transaction Reference</label>
-            <input type="text" class="form-control" id="GcashReceipt" name="Gcash.Receipt"
-              value="{{ old('Gcash.Receipt') }}">
-            @error('Gcash.Receipt')
+            <input type="text" class="form-control" id="GcashReceipt" name="GcashReceipt"
+              value="{{ old('GcashReceipt') }}">
+            @error('GcashReceipt')
               <div class="alert alert-danger mt-2">{{ $message }}</div>
             @enderror
           </div>
