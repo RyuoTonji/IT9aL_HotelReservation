@@ -1,3 +1,6 @@
+<?php
+use App\Models\LoyaltyTier;
+?>
 @extends('layouts.app')
 
 @section('title', 'Booking Details')
@@ -180,7 +183,7 @@
           </tr>
           @if ($discount > 0)
             <tr>
-              <td>Loyalty Discount ({{ Auth::user()->loyalty->loyaltyTier->Discount }}%)</td>
+              <td>Loyalty Discount ({{ $tier->Discount }}%)</td>
               <td>-{{ number_format($discount, 2) }}</td>
             </tr>
           @endif

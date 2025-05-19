@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\BookingDetail;
 use App\Models\Room;
 use App\Models\Booking;
+use App\Models\LoyaltyTier;
 use App\Models\Service;
 use App\Models\PaymentInfo;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomSizeType;
+use App\Models\UserLoyalty;
 use Illuminate\Http\Request;
 
 class PageController extends Controller {
@@ -82,12 +84,13 @@ class PageController extends Controller {
       $guestFee = $booking->RoomSize->PricePerPerson * $booking->NumberOfGuests;
       $serviceCost = $booking->Services->sum('ServicePrice');
       $subtotal = $roomPrice + $guestFee + $serviceCost;
-      $userLoyalty = Auth::user()->loyalty;
+      $userLoyalty = UserLoyalty::where('UserID', Auth::id())->first();
       if ($userLoyalty && $userLoyalty->LoyaltyTierID) {
-        $tier = $userLoyalty->loyaltyTier;
+        $tier = LoyaltyTier::where('ID', $userLoyalty->LoyaltyTierID)->first();
         $discount = $subtotal * ($tier->Discount / 100);
       }
       $totalAmount ??= $subtotal - $discount;
+      // dd($userLoyalty, $tier, $discount, $subtotal);
 
       $request->session()->put('bookingDetailID', $booking->ID);
       $request->session()->put('totalAmount', $totalAmount);
@@ -95,6 +98,7 @@ class PageController extends Controller {
 
     return view('customer.bookingdetails', [
       'title' => 'Booking Details',
+      'tier' => $tier,
       'booking' => $booking,
       'bookingDetail' => $booking, // Alias for compatibility
       'roomPrice' => $roomPrice,
