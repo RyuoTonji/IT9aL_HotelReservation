@@ -125,112 +125,114 @@
       @if ($HasPendingBooking)
         <div class="col-span mb-3">
           <div class="text-center col-span">
-            <div class="invalid-feedback d-block">You currently have a pending booking!</div>
-            <a href="{{ route('booking.details') }}" class="btn btn-confirm">Check Pending Booking</a>
+            <div class="alert alert-warning mt-2">
+              You currently have a pending booking!
+            </div>
+
+            <a href="{{ route('checkout') }}" class="btn btn-confirm">Check Pending Booking</a>
           </div>
         </div>
+      @else
+        <form action="{{ route('append.booking') }}" method="POST">
+          @csrf
+
+          <div class="form-group">
+            <label for="checkIn">Check-In Date</label>
+            <div class="position-relative">
+              <input type="date" class="form-control" id="checkIn" placeholder="mm/dd/yyyy" name="CheckInDate"
+                value="{{ old('CheckInDate') }}" required @if ($HasPendingBooking) disabled @endif>
+              <i class="bi position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"></i>
+            </div>
+            @error('CheckInDate')
+              <div class="alert alert-danger mt-2">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="form-group">
+            <label for="checkOut">Check-Out Date</label>
+            <div class="position-relative">
+              <input type="date" class="form-control" id="checkOut" placeholder="mm/dd/yyyy" name="CheckOutDate"
+                value="{{ old('CheckOutDate') }}" required @if ($HasPendingBooking) disabled @endif>
+              <i class="bi position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"></i>
+            </div>
+            @error('CheckOutDate')
+              <div class="alert alert-danger mt-2">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="form-group">
+            <label for="roomType">Room Type</label>
+            <select class="form-control" id="roomType" name="RoomType" required
+              @if ($HasPendingBooking) disabled @endif>
+              <option value="" disabled {{ old('RoomType') ? '' : 'selected' }}>Select Room Type</option>
+              @forelse ($RoomTypes as $roomType)
+                <option value="{{ $roomType->RoomTypeName }}"
+                  {{ old('RoomType') == $roomType->RoomTypeName ? 'selected' : '' }}>
+                  {{ $roomType->RoomTypeName }} Room</option>
+              @empty
+                <option value="" disabled selected>No Room Types Available</option>
+              @endforelse
+
+            </select>
+            @error('RoomType')
+              <div class="alert alert-danger mt-2">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="form-group">
+            <label for="roomType">Room Size</label>
+            <select class="form-control" id="RoomSize" name="RoomSize" required
+              @if ($HasPendingBooking) disabled @endif>
+              <option value="" disabled {{ old('RoomSize') ? '' : 'selected' }}>Select Room Size</option>
+              @forelse ($RoomSizes as $roomSize)
+                <option value="{{ $roomSize->RoomSizeName }}" data-capacity="{{ $roomSize->RoomCapacity }}""
+                  {{ old('RoomSize') == $roomSize->RoomSizeName ? 'selected' : '' }}>
+                  {{ $roomSize->RoomSizeName }}</option>
+              @empty
+                <option value="" disabled selected>No Room Sizes Available</option>
+              @endforelse
+            </select>
+            @error('RoomSize')
+              <div class="alert alert-danger mt-2">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <label for="guests">Number of Guests</label>
+          <div class="form-group">
+            <input type="number" class="form-control" id="guests" min="1" name="NumberOfGuests"
+              value={{ old('NumberOfGuests') }} required @if ($HasPendingBooking) disabled @endif>
+            @error('NumberOfGuests')
+              <div class="alert alert-danger mt-2">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="form-group services-ticklist d-flex flex-column mb-2">
+            <label>Additional Services (Optional)</label>
+            @forelse ($Services as $service)
+              <label>
+                <input type="checkbox" name="Services[]" value="{{ $service->ID }}"
+                  {{ in_array($service->ID, old('Services', [])) ? 'checked' : '' }}
+                  @if ($HasPendingBooking) disabled @endif>
+                {{ $service->ServiceName }} (₱{{ number_format($service->ServicePrice, 2) }})
+              </label>
+            @empty
+              <p>No additional services available.</p>
+            @endforelse
+            @error('Services')
+              <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+          </div>
+
+          @if (!$HasPendingBooking)
+            <div class="text-center">
+              <button type="button" class="btn btn-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel
+                Booking</button>
+              <button type="submit" class="btn btn-confirm">Confirm
+                Booking</button>
+            </div>
+          @endif
+        </form>
       @endif
-
-      <form action="{{ route('append.booking') }}" method="POST">
-        @csrf
-
-        <div class="form-group">
-          <label for="checkIn">Check-In Date</label>
-          <div class="position-relative">
-            <input type="date" class="form-control" id="checkIn" placeholder="mm/dd/yyyy" name="CheckInDate"
-              value="{{ old('CheckInDate') }}" required @if ($HasPendingBooking) disabled @endif>
-            <i class="bi position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"></i>
-          </div>
-          @error('CheckInDate')
-            <div class="alert alert-danger mt-2">{{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label for="checkOut">Check-Out Date</label>
-          <div class="position-relative">
-            <input type="date" class="form-control" id="checkOut" placeholder="mm/dd/yyyy" name="CheckOutDate"
-              value="{{ old('CheckOutDate') }}" required @if ($HasPendingBooking) disabled @endif>
-            <i class="bi position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);"></i>
-          </div>
-          @error('CheckOutDate')
-            <div class="alert alert-danger mt-2">{{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label for="roomType">Room Type</label>
-          <select class="form-control" id="roomType" name="RoomType" required
-            @if ($HasPendingBooking) disabled @endif>
-            <option value="" disabled {{ old('RoomType') ? '' : 'selected' }}>Select Room Type</option>
-            @forelse ($RoomTypes as $roomType)
-              <option value="{{ $roomType->RoomTypeName }}"
-                {{ old('RoomType') == $roomType->RoomTypeName ? 'selected' : '' }}>
-                {{ $roomType->RoomTypeName }} Room</option>
-            @empty
-              <option value="" disabled selected>No Room Types Available</option>
-            @endforelse
-
-          </select>
-          @error('RoomType')
-            <div class="alert alert-danger mt-2">{{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label for="roomType">Room Size</label>
-          <select class="form-control" id="RoomSize" name="RoomSize" required
-            @if ($HasPendingBooking) disabled @endif>
-            <option value="" disabled {{ old('RoomSize') ? '' : 'selected' }}>Select Room Size</option>
-            @forelse ($RoomSizes as $roomSize)
-              <option value="{{ $roomSize->RoomSizeName }}" data-capacity="{{ $roomSize->RoomCapacity }}""
-                {{ old('RoomSize') == $roomSize->RoomSizeName ? 'selected' : '' }}>
-                {{ $roomSize->RoomSizeName }}</option>
-            @empty
-              <option value="" disabled selected>No Room Sizes Available</option>
-            @endforelse
-          </select>
-          @error('RoomSize')
-            <div class="alert alert-danger mt-2">{{ $message }}</div>
-          @enderror
-        </div>
-
-        <label for="guests">Number of Guests</label>
-        <div class="form-group">
-          <input type="number" class="form-control" id="guests" min="1" name="NumberOfGuests"
-            value={{ old('NumberOfGuests') }} required @if ($HasPendingBooking) disabled @endif>
-          @error('NumberOfGuests')
-            <div class="alert alert-danger mt-2">{{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="form-group services-ticklist d-flex flex-column mb-2">
-          <label>Additional Services (Optional)</label>
-          @forelse ($Services as $service)
-            <label>
-              <input type="checkbox" name="Services[]" value="{{ $service->ID }}"
-                {{ in_array($service->ID, old('Services', [])) ? 'checked' : '' }}
-                @if ($HasPendingBooking) disabled @endif>
-              {{ $service->ServiceName }} (₱{{ number_format($service->ServicePrice, 2) }})
-            </label>
-          @empty
-            <p>No additional services available.</p>
-          @endforelse
-          @error('Services')
-            <div class="invalid-feedback d-block">{{ $message }}</div>
-          @enderror
-        </div>
-
-        @if (!$HasPendingBooking)
-          <div class="text-center">
-            <button type="button" class="btn btn-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel
-              Booking</button>
-            <button type="submit" class="btn btn-confirm">Confirm
-              Booking</button>
-          </div>
-        @endif
-
-      </form>
     </div>
   </div>
 

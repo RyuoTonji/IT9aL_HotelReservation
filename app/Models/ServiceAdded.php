@@ -9,7 +9,7 @@ class ServiceAdded extends Model {
   protected $fillable = ['BookingDetailID', 'ServiceID'];
 
   public function bookingDetail() {
-    return $this->belongsTo(BookingDetail::class, 'BookingDetailID');
+    return $this->belongsTo(Booking::class, 'BookingDetailID');
   }
 
   public function service() {

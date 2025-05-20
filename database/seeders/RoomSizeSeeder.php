@@ -6,18 +6,18 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class RoomSizeTypeSeeder extends Seeder {
+class RoomSizeSeeder extends Seeder {
   /**
    * Run the database seeds.
    */
   public function run(): void {
-    DB::table('RoomSizeTypes')->insert([
+    DB::table('RoomSizes')->insert([
       [
         'RoomSizeName' => 'Single',
         'RoomSizeDescription' => 'Small room size.',
         'RoomCapacity' => 1,
         'PricePerPerson' => 0,
-        'RoomSizePrice' => 50000.00,
+        'RoomSizePrice' => 1000.00,
         'created_at' => now(),
         'updated_at' => now(),
       ],
@@ -25,8 +25,8 @@ class RoomSizeTypeSeeder extends Seeder {
         'RoomSizeName' => 'Double',
         'RoomSizeDescription' => 'Good for 2 people.',
         'RoomCapacity' => 2,
-        'PricePerPerson' => 200.00,
-        'RoomSizePrice' => 100000.00,
+        'PricePerPerson' => 0,
+        'RoomSizePrice' => 2500.00,
         'created_at' => now(),
         'updated_at' => now(),
       ],
@@ -34,8 +34,8 @@ class RoomSizeTypeSeeder extends Seeder {
         'RoomSizeName' => 'Family',
         'RoomSizeDescription' => 'Family room size.',
         'RoomCapacity' => 10,
-        'PricePerPerson' => 500.00,
-        'RoomSizePrice' => 999999.00,
+        'PricePerPerson' => 250.00,
+        'RoomSizePrice' => 10000.00,
         'created_at' => now(),
         'updated_at' => now(),
       ],

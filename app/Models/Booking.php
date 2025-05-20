@@ -29,23 +29,26 @@ class Booking extends Model {
     return $this->belongsTo(User::class, 'UserID', 'ID');
   }
 
-  public function Room(): BelongsTo {
-    return $this->belongsTo(Room::class, 'RoomTypeID', 'ID');
+  public function room(): BelongsTo {
+    return $this->belongsTo(RoomType::class, 'RoomTypeID', 'ID');
   }
 
-  public function RoomSize(): BelongsTo {
-    return $this->belongsTo(RoomSizeType::class, 'RoomSizeID', 'ID');
+  public function roomSize(): BelongsTo {
+    return $this->belongsTo(RoomSize::class, 'RoomSizeID', 'ID');
   }
 
   public function serviceAdded(): HasMany {
     return $this->hasMany(ServiceAdded::class, 'BookingDetailID', 'ID');
   }
 
-  public function Services() {
+  public function services() {
     return $this->belongsToMany(Service::class, 'ServicesAdded', 'BookingDetailID', 'ServiceID');
   }
 
   public function paymentInfo(): HasOne {
     return $this->hasOne(PaymentInfo::class, 'BookingDetailID', 'ID');
+  }
+  public function costDetails() {
+    return $this->hasOne(BookingCostDetail::class, 'BookingDetailID', 'ID');
   }
 }

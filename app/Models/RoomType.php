@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Room extends Model {
+class RoomType extends Model {
   protected $table = 'RoomTypes';
 
   protected $primaryKey = 'ID';
@@ -15,6 +15,7 @@ class Room extends Model {
     'RoomTypeName',
     'RoomDescription',
     'RoomPrice',
+    'SucceedingNights',
     'RoomCapacity',
     'ImagePathname',
     'ImageName',
@@ -23,9 +24,10 @@ class Room extends Model {
 
   protected $casts = [
     'RoomPrice' => 'decimal:2',
+    'SucceedingNights' => 'decimal:2',
   ];
 
   public function bookingDetails(): HasMany {
-    return $this->hasMany(BookingDetail::class, 'ID', 'ID');
+    return $this->hasMany(Booking::class, 'ID', 'ID');
   }
 }

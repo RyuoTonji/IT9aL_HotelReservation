@@ -24,7 +24,7 @@ class PaymentInfo extends Model {
   ];
 
   public function bookingDetail() {
-    return $this->belongsTo(BookingDetail::class, 'BookingDetailID');
+    return $this->belongsTo(Booking::class, 'BookingDetailID');
   }
 
   public function cashPayment() {
@@ -35,7 +35,11 @@ class PaymentInfo extends Model {
     return $this->hasOne(PaymentType_Card::class, 'PaymentInfoID');
   }
 
-  public function gcashPayment() {
-    return $this->hasOne(PaymentType_GCash::class, 'PaymentInfoID');
+  public function ePayment() {
+    return $this->hasOne(PaymentType_EPayment::class, 'PaymentInfoID');
+  }
+
+  public function bankTransferPayment() {
+    return $this->hasOne(PaymentType_BankTransfer::class, 'PaymentInfoID');
   }
 }

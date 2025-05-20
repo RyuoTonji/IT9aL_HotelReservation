@@ -10,6 +10,7 @@ use App\Models\PaymentType_Card;
 use App\Models\PaymentType_GCash;
 use App\Models\LoyaltyPointTransaction;
 use App\Models\LoyaltyTier;
+use App\Models\PaymentType_EPayment;
 use App\Models\UserLoyalty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -150,7 +151,7 @@ class CheckoutController extends Controller {
           'CVC' => $request->input('CardCVC'),
         ]);
       } elseif ($request->PaymentMethod === 'Gcash') {
-        PaymentType_GCash::create([
+        PaymentType_EPayment::create([
           'PaymentInfoID' => $paymentInfo->ID,
           'Name' => $request->input('GcashName'),
           'Number' => $request->input('GcashNumber'),

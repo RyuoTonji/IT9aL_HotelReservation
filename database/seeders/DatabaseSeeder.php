@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder {
 
     $this->call([
       UserSeeder::class,
-      RoomSizeTypeSeeder::class,
+      RoomSizeSeeder::class,
       RoomTypeSeeder::class,
       ServiceSeeder::class,
       CashbackThresholdSeeder::class,

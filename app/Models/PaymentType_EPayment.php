@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentType_GCash extends Model {
-  protected $table = 'PaymentType_GCash';
+class PaymentType_EPayment extends Model {
+  protected $table = 'PaymentType_EPayment';
   protected $fillable = ['PaymentInfoID', 'Name', 'Number', 'Amount', 'ReceiptNumber'];
 
   protected $casts = [

@@ -15,8 +15,9 @@ class RoomTypeSeeder extends Seeder {
       [
         'RoomTypeName' => 'Standard',
         'RoomDescription'
-        => 'A cozy room with basic amenities.',
-        'RoomPrice' => 50000.00,
+        => 'Ideal for families, Couple, and many more our Standard Suite includes multiple bedrooms, a cozy living area, and child-friendly amenities for a comfortable stay.',
+        'RoomPrice' => 10000.00,
+        'SucceedingNights' => 2000.00,
         'RoomCapacity' => 1,
         'ImagePathname' => 'img/rooms/RoomStandard.png',
         'ImageName' => 'RoomStandard.png',
@@ -25,8 +26,9 @@ class RoomTypeSeeder extends Seeder {
       ],
       [
         'RoomTypeName' => 'Executive',
-        'RoomDescription' => 'A superior room with premium amenities.',
-        'RoomPrice' => 100000.00,
+        'RoomDescription' => 'Perfect for business travelers, our Executive Suite offers a spacious living area, high-speed Wi-Fi, and a dedicated workspace for productivity.',
+        'RoomPrice' => 15000.00,
+        'SucceedingNights' => 5000.00,
         'RoomCapacity' => 2,
         'ImagePathname' => 'img/rooms/RoomSuperior.jpg',
         'ImageName' => 'RoomSuperior.jpg',
@@ -35,8 +37,9 @@ class RoomTypeSeeder extends Seeder {
       ],
       [
         'RoomTypeName' => 'Deluxe',
-        'RoomDescription' => 'A luxurious room with top-notch facilities.',
-        'RoomPrice' => 999999.00,
+        'RoomDescription' => 'Experience elegance in our Deluxe King Room, featuring a plush king-sized bed, modern amenities, and a private balcony with city views.',
+        'RoomPrice' => 20000.00,
+        'SucceedingNights' => 7000.00,
         'RoomCapacity' => 2,
         'ImagePathname' => 'img/rooms/RoomDeluxe.png',
         'ImageName' => 'RoomDeluxe.png',

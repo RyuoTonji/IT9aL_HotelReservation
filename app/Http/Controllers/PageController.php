@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BookingDetail;
-use App\Models\Room;
 use App\Models\Booking;
 use App\Models\LoyaltyTier;
 use App\Models\Service;
 use App\Models\PaymentInfo;
 use Illuminate\Support\Facades\Auth;
-use App\Models\RoomSizeType;
+use App\Models\RoomSize;
+use App\Models\RoomType;
 use App\Models\UserLoyalty;
 use Illuminate\Http\Request;
 
 class PageController extends Controller {
   public function home() {
-    return view('customer.home', ['title' => 'Home', 'Rooms' => Room::all()]);
+    return view('customer.home', ['title' => 'Home', 'Rooms' => RoomType::all()]);
   }
 
   public function explore() {
@@ -23,7 +22,7 @@ class PageController extends Controller {
   }
 
   public function rooms() {
-    return view('customer.rooms', ['title' => 'Rooms', 'Rooms' => Room::get()]);
+    return view('customer.rooms', ['title' => 'Rooms', 'Rooms' => RoomSize::get()]);
   }
 
   public function about() {
@@ -39,8 +38,8 @@ class PageController extends Controller {
       'customer.booking',
       ['title' => 'Booking'],
       [
-        'RoomSizes' => RoomSizeType::get(),
-        'RoomTypes' => Room::get(),
+        'RoomSizes' => RoomSize::get(),
+        'RoomTypes' => RoomType::get(),
         'Services' => Service::where('ServiceStatus', 'Available')->get(),
         'HasPendingBooking' => Booking::where('UserID', Auth::id())
           ->where('BookingStatus', 'Pending')
@@ -50,16 +49,17 @@ class PageController extends Controller {
     );
   }
 
-  public function BookingDetails(Request $request) {
+  public function CheckoutForm(Request $request) {
     $this->AccessCheck();
 
     $booking = null;
-    $totalAmount = session('TotalAmount');
+    $costDetails = null;
+    $tier = null;
 
     // Try session BookingID first
     $bookingID = session('BookingID');
     if ($bookingID) {
-      $booking = Booking::with(['room', 'roomSize', 'services'])
+      $booking = Booking::with(['room', 'roomSize', 'services', 'costDetails'])
         ->where('ID', $bookingID)
         ->where('UserID', Auth::id())
         ->first();
@@ -67,47 +67,31 @@ class PageController extends Controller {
 
     // If no session booking, get latest pending booking
     if (!$booking) {
-      $booking = Booking::with(['Room', 'RoomSize', 'Services'])
+      $booking = Booking::with(['room', 'roomSize', 'services', 'costDetails'])
         ->where('UserID', Auth::id())
         ->where('BookingStatus', 'Pending')
         ->orderBy('created_at', 'desc')
         ->first();
     }
 
-    // $bookingDetail = Booking::where('BookingID', $bookingID)->firstOrFail();
-
-    // Calculate costs
-    $roomPrice = $guestFee = $serviceCost = $subtotal = $discount = 0;
-    // dd($booking);
     if ($booking) {
-      $roomPrice = $booking->Room->RoomPrice;
-      $guestFee = $booking->RoomSize->PricePerPerson * $booking->NumberOfGuests;
-      $serviceCost = $booking->Services->sum('ServicePrice');
-      $subtotal = $roomPrice + $guestFee + $serviceCost;
+      $costDetails = $booking->costDetails;
       $userLoyalty = UserLoyalty::where('UserID', Auth::id())->first();
       if ($userLoyalty && $userLoyalty->LoyaltyTierID) {
         $tier = LoyaltyTier::where('ID', $userLoyalty->LoyaltyTierID)->first();
-        $discount = $subtotal * ($tier->Discount / 100);
       }
-      $totalAmount ??= $subtotal - $discount;
-      // dd($userLoyalty, $tier, $discount, $subtotal);
 
-      $request->session()->put('bookingDetailID', $booking->ID);
-      $request->session()->put('totalAmount', $totalAmount);
+      $request->session()->put('BookingID', $booking->ID);
     }
 
-    return view('customer.bookingdetails', [
+    return view('customer.payment', [
       'title' => 'Booking Details',
       'tier' => $tier,
       'booking' => $booking,
-      'bookingDetail' => $booking, // Alias for compatibility
-      'roomPrice' => $roomPrice,
-      'guestFee' => $guestFee,
-      'serviceCost' => $serviceCost,
-      'subtotal' => $subtotal,
-      'discount' => $discount,
-      'totalAmount' => $totalAmount,
-      'PaymentProcessed' => PaymentInfo::where('BookingDetailID', $request->session()->get('bookingDetailID'))->where('PaymentStatus', 'Completed')->first(),
+      'costDetails' => $costDetails,
+      'PaymentProcessed' => $booking ? PaymentInfo::where('BookingDetailID', $booking->ID)
+        ->where('PaymentStatus', 'Submitted')
+        ->first() : null,
     ]);
   }
 
@@ -115,7 +99,7 @@ class PageController extends Controller {
     return view(
       'customer.checkout',
       ['title' => 'Checkout'],
-      ['Room' => Room::findOrFail($RoomID)]
+      ['Room' => RoomType::findOrFail($RoomID)]
     );
   }
 

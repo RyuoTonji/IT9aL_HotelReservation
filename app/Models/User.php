@@ -51,7 +51,7 @@ class User extends Authenticatable {
   }
 
   public function bookingDetails(): HasMany {
-    return $this->hasMany(BookingDetail::class, 'ID', 'id');
+    return $this->hasMany(Booking::class, 'ID', 'id');
   }
   public function loyalty(): HasOne {
     return $this->hasOne(UserLoyalty::class, 'UserID', 'ID');

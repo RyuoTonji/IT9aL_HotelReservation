@@ -79,7 +79,7 @@ class CashbackThresholdSeeder extends Seeder {
       [
         'ThresholdName' => '7.5%',
         'ThresholdDescription' => '7.5% Cashback through Loyalty Points',
-        'MinPaidAmount' => 750000,
+        'MinPaidAmount' => 1000000,
         'CashbackPercentile' => 7.5,
         'created_at' => now(),
         'updated_at' => now(),
@@ -87,7 +87,7 @@ class CashbackThresholdSeeder extends Seeder {
       [
         'ThresholdName' => '10%',
         'ThresholdDescription' => '10% Cashback through Loyalty Points',
-        'MinPaidAmount' => 1000000,
+        'MinPaidAmount' => 2500000,
         'CashbackPercentile' => 10,
         'created_at' => now(),
         'updated_at' => now(),

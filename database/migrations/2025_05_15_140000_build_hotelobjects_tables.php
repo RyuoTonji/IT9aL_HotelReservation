@@ -9,7 +9,7 @@ return new class extends Migration {
    * Run the migrations.
    */
   public function up(): void {
-    Schema::create('RoomSizeTypes', function (Blueprint $table) {
+    Schema::create('RoomSizes', function (Blueprint $table) {
       $table->id('ID');
       $table->string('RoomSizeName')->unique();
       $table->text('RoomSizeDescription')->nullable();
@@ -25,6 +25,7 @@ return new class extends Migration {
       $table->text('RoomDescription')->nullable();
       $table->integer('RoomCapacity')->default(1);
       $table->decimal('RoomPrice', 20, 2);
+      $table->decimal('SucceedingNights', 20, 2);
       $table->string('ImagePathname')->nullable();
       $table->string('ImageName')->nullable();
       $table->string('MimeType')->nullable();

@@ -13,8 +13,8 @@ return new class extends Migration {
       $table->id('ID');
       $table->foreignId('BookingDetailID')->constrained('BookingDetails', 'ID')->onDelete('cascade');
       $table->decimal('TotalAmount', 20, 2);
-      $table->enum('PaymentStatus', ['Pending', 'Completed', 'Failed'])->default('Pending');
-      $table->enum('PaymentMethod', ['Cash', 'Card', 'GCash'])->default('Cash');
+      $table->enum('PaymentStatus', ['Pending', 'Submitted', 'Verified', 'Failed'])->default('Pending');
+      $table->enum('PaymentMethod', ['Cash', 'Card', 'EPayment', 'Paypal', 'BankTransfer'])->default('Cash');
       $table->timestamps();
     });
 
@@ -29,20 +29,39 @@ return new class extends Migration {
     Schema::create('paymenttype_card', function (Blueprint $table) {
       $table->id('ID');
       $table->foreignId('PaymentInfoID')->constrained('PaymentInfos', 'ID')->onDelete('cascade');
-      $table->string('Name');
+      $table->string('CardHolderName')->nullable();
       $table->string('CardNumber');
       $table->string('ExpiryDate', 5);
-      $table->string('CVC', 4);
+      $table->string('CVC', 4)->nullable();
       $table->timestamps();
     });
 
-    Schema::create('paymenttype_gcash', function (Blueprint $table) {
+    Schema::create('paymenttype_epayment', function (Blueprint $table) {
       $table->id('ID');
       $table->foreignId('PaymentInfoID')->constrained('PaymentInfos', 'ID')->onDelete('cascade');
-      $table->string('Name');
-      $table->string('Number', 11);
-      $table->decimal('Amount', 20, 2);
-      $table->string('ReceiptNumber');
+      $table->string('Name')->nullable();
+      $table->string('Provider')->nullable();
+      $table->string('Number', 11)->nullable();
+      $table->decimal('Amount', 20, 2)->nullable();
+      $table->string('ReferenceNum')->nullable();
+      $table->timestamps();
+    });
+
+    Schema::create('paymenttype_paypal', function (Blueprint $table) {
+      $table->id('ID');
+      $table->foreignId('PaymentInfoID')->constrained('PaymentInfos', 'ID')->onDelete('cascade');
+      $table->string('Name')->nullable();
+      $table->string('Amount')->nullable();
+      $table->string('ReferenceNum')->nullable();
+      $table->timestamps();
+    });
+
+    Schema::create('paymenttype_banktransfer', function (Blueprint $table) {
+      $table->id('ID');
+      $table->foreignId('PaymentInfoID')->constrained('PaymentInfos', 'ID')->onDelete('cascade');
+      $table->string('AccountName')->nullable();
+      $table->string('AccountNumber')->nullable();
+      $table->string('RoutingNumber')->nullable();
       $table->timestamps();
     });
   }
@@ -54,6 +73,8 @@ return new class extends Migration {
     Schema::dropIfExists('paymentinfos');
     Schema::dropIfExists('paymenttype_cash');
     Schema::dropIfExists('paymenttype_card');
-    Schema::dropIfExists('paymenttype_gcash');
+    Schema::dropIfExists('paymenttype_epayment');
+    Schema::dropIfExists('paymenttype_paypal');
+    Schema::dropIfExists('paymenttype_banktransfer');
   }
 };
