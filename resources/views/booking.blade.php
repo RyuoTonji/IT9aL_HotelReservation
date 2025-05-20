@@ -117,6 +117,84 @@
       justify-content: center;
       border-top: none;
     }
+
+    /* Payment Section Styles */
+    .payment-section {
+      margin-top: 30px;
+    }
+
+    .payment-section h3 {
+      color: #000;
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      background-color: #fff;
+    }
+
+    .payment-option input[type="radio"] {
+      margin-right: 15px;
+    }
+
+    .payment-option label {
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+      flex-grow: 1;
+    }
+
+    .payment-option .icon-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .payment-option img {
+      object-fit: contain;
+    }
+
+    .payment-option#gcashPaymaya img{
+      width: 80px;
+      height: 50px;
+    }
+
+    .payment-option#paypalCreditCard img{
+      width: 150px;
+      height: 150px;
+    }
+
+    .payment-option#bankTransfer img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .payment-details {
+      display: none;
+      margin-top: 10px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+
+    .payment-details.active {
+      display: block;
+    }
+
+    .payment-details img.qr-code {
+      width: 100px;
+      height: 100px;
+      margin-top: 10px;
+    }
   </style>
 
   <div class="booking-container">
@@ -150,6 +228,73 @@
             <option value="suite">Suite</option>
           </select>
         </div>
+
+        <!-- Payment Section -->
+        <div class="payment-section">
+          <h3>Choose Payment Option</h3>
+
+          <!-- GCash and PayMaya Option -->
+          <div class="payment-option" id="gcashPaymaya">
+            <input type="radio" name="paymentMethod" id="gcashPaymaya" value="gcashPaymaya">
+            <label for="gcashPaymaya">GCash / PayMaya</label>
+            <div class="icon-container">
+              <img src="{{ asset('img/transactions/GCash.png') }}" alt="GCash Icon">
+              <img src="{{ asset('img/transactions/PayMaya.png') }}" alt="PayMaya Icon">
+            </div>
+          </div>
+          <div id="gcashPaymaya-details" class="payment-details">
+            <p><strong>Hotel Name:</strong> KagayakuKin Yume Hotel</p>
+            <p><strong>GCash Number:</strong> 0917-123-4567</p>
+            <p><strong>PayMaya Number:</strong> 0917-987-6543</p>
+            <img src="https://via.placeholder.com/100?text=GCash+PayMaya+QR" alt="GCash QR Code" class="qr-code">
+            <img src="https://via.placeholder.com/100?text=GCash+PayMaya+QR" alt="PayMaya QR Code" class="qr-code">
+          </div>
+
+          <!-- PayPal and Credit/Debit Card Option -->
+          <div class="payment-option" id="paypalCreditCard">
+            <input type="radio" name="paymentMethod" id="paypalCreditCard" value="paypalCreditCard">
+            <label for="paypalCreditCard">PayPal / Credit/Debit Card</label>
+            <div class="icon-container">
+              <img src="{{ asset('img/transactions/creditdebit.jpg') }}" alt="Credit/Debit Card Icon">
+            </div>
+          </div>
+          <div id="paypalCreditCard-details" class="payment-details">
+            <p><strong>PayPal Email:</strong> payments@kagayakukin.com</p>
+            <img src="https://via.placeholder.com/100?text=PayPal+QR" alt="PayPal QR Code" class="qr-code">
+            <div class="form-group">
+              <label for="cardNumber">Card Number</label>
+              <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+            </div>
+            <div class="form-group">
+              <label for="cardName">Name on Card</label>
+              <input type="text" class="form-control" id="cardName" placeholder="John Doe" required>
+            </div>
+          </div>
+
+          <!-- Bank Transfer Option -->
+          <div class="payment-option" id="bankTransfer">
+            <input type="radio" name="paymentMethod" id="bankTransfer" value="bankTransfer">
+            <label for="bankTransfer">Bank Transfer</label>
+            <div class="icon-container">
+              <img src="{{ asset('img/transactions/bank.png') }}" alt="Bank Transfer Icon">
+            </div>
+          </div>
+          <div id="bankTransfer-details" class="payment-details">
+            <div class="form-group">
+              <label for="accountName">Account Name</label>
+              <input type="text" class="form-control" id="accountName" placeholder="KagayakuKin Yume Hotel" required>
+            </div>
+            <div class="form-group">
+              <label for="accountNumber">Account Number</label>
+              <input type="text" class="form-control" id="accountNumber" placeholder="1234567890" required>
+            </div>
+            <div class="form-group">
+              <label for="routingNumber">Routing Number</label>
+              <input type="text" class="form-control" id="routingNumber" placeholder="987654321" required>
+            </div>
+          </div>
+        </div>
+
         <div class="text-center">
           <button type="button" class="btn btn-confirm" data-bs-toggle="modal" data-bs-target="#confirmModal">Confirm
             Booking</button>
@@ -192,4 +337,23 @@
       </div>
     </div>
   </div>
+
+    <script>
+    // JavaScript to toggle payment details visibility
+    document.querySelectorAll('input[name="paymentMethod"]').forEach((radio) => {
+      radio.addEventListener('change', function() {
+        // Hide all payment details
+        document.querySelectorAll('.payment-details').forEach((details) => {
+          details.classList.remove('active');
+        });
+
+        // Show the selected payment details
+        const selectedDetails = document.getElementById(`${this.value}-details`);
+        if (selectedDetails) {
+          selectedDetails.classList.add('active');
+        }
+      });
+    });
+  </script>
+
 @endsection

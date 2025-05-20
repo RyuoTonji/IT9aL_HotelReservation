@@ -26,4 +26,4 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/rate', [AdminController::class, 'rate'])->name('rate');
 });
 
-Route::get('/booking', [AdminController::class, 'createBooking'])->name('booking');
+// Route::get('/booking', [AdminController::class, 'createBooking'])->name('booking');
