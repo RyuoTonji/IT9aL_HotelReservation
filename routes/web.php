@@ -5,6 +5,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/explore', [PageController::class, 'explore'])->name('explore');
@@ -32,3 +33,21 @@ Route::prefix('/admin')->middleware('RestrictByRole:Admin')->group(function () {
 // Route::prefix('/cashier')->middleware('RestrictByRole:Cashier')->group(function () {
 //     Route::get('/', [CashierController::class, 'dashboard'])->name('cashier.dashboard');
 // });
+
+Route::prefix('/admin')->middleware('RestrictByRole:Admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'Dashboard'])->name('admin.dashboard');
+    Route::get('/desk', [AdminController::class, 'FrontDesk'])->name('admin.frontdesk');
+    Route::get('/guest', [AdminController::class, 'Guest'])->name('admin.guest');
+    Route::get('/rooms', [AdminController::class, 'Rooms'])->name('admin.rooms');
+    Route::get('/deals', [AdminController::class, 'Deals'])->name('admin.deals');
+    Route::get('/rate', [AdminController::class, 'Rate'])->name('admin.rate');
+});
+
+Route::get('/master/dashboard', [AdminController::class, 'MasterDashboard'])
+    ->middleware('auth')
+    ->name('master.dashboard');
+
+
+Route::post('/room/{RoomID}/checkout', [CheckoutController::class, 'ProcessPayment'])
+    ->middleware('RestrictByRole:Customer,Cashier')
+    ->name('checkout.process');

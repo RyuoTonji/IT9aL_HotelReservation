@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller {
   public function RegisterUser(Request $request) {
@@ -38,6 +39,9 @@ class AuthController extends Controller {
       ])->withInput($request->only('email'));
     }
 
+    if (Auth::user()->Role === 'Admin') {
+      return redirect()->route('admin.dashboard')->with(['toast_error' => 'Unauthorized action.']);
+    }
     return back()->with('toast_success', 'Login successful!');
   }
 
@@ -47,4 +51,5 @@ class AuthController extends Controller {
     $request->session()->regenerateToken();
     return redirect()->route('home')->with('toast_success', 'Logout successful!');
   }
+
 }
