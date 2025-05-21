@@ -200,15 +200,6 @@
       <div class="container">
         <div class="row">
           <div class="col-md-4">
-            <h3 class="fs-5 mb-3">About Us</h3>
-            <ul class="list-unstyled">
-              <li><a href="#" class="text-white text-decoration-none">Our Story</a></li>
-              <li><a href="#" class="text-white text-decoration-none">Awards & Recognition</a></li>
-              <li><a href="#" class="text-white text-decoration-none">Careers</a></li>
-              <li><a href="#" class="text-white text-decoration-none">Press Room</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
             <h3 class="fs-5 mb-3">Contact</h3>
             <ul class="list-unstyled">
               <li><i class="bi bi-geo-alt me-2"></i> 123 Luxury Avenue, Cityscape, Country</li>

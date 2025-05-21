@@ -22,7 +22,7 @@ class PageController extends Controller {
   }
 
   public function rooms() {
-    return view('customer.rooms', ['title' => 'Rooms', 'Rooms' => RoomSize::get()]);
+    return view('customer.rooms', ['title' => 'Rooms', 'Rooms' => RoomType::get()]);
   }
 
   public function about() {

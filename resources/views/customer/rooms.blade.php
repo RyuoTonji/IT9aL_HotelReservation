@@ -22,7 +22,7 @@
       <div class="position-absolute top-0 left-0 w-100 h-100 bg-dark" style="opacity: 0.5;"></div>
     </div>
     <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-      <h1 class="display-4 fw-bold mb-3 text-white">Rooms and Suites</h1>
+      <h1 class="display-4 fw-bold mb-3 text-white heading-underline">Rooms and Suites</h1>
       <p class="lead text-white">Experience unparalleled comfort in our luxurious accommodations</p>
     </div>
   </section>
@@ -39,7 +39,7 @@
                   style="width: 100%; height: 100%; object-fit: cover;" alt="Deluxe King Room">
               </div>
               <div class="card-body">
-                <h3 class="card-title fs-5">{{ $room->RoomName }}</h3>
+                <h3 class="card-title fs-5">{{ $room->RoomTypeName }}</h3>
                 <p class="card-text">{{ $room->RoomDescription }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <span class="fw-bold">₱{{ $room->RoomPrice }}/night</span>

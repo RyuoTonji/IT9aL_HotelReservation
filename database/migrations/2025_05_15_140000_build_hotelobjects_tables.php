@@ -71,7 +71,7 @@ return new class extends Migration {
     Schema::dropIfExists('RoomTypes');
     Schema::dropIfExists('Services');
     Schema::dropIfExists('CashbackThresholds');
-Schema::dropIfExists('LoyaltyTiers');
+    Schema::dropIfExists('LoyaltyTiers');
 
   }
 };

@@ -26,7 +26,7 @@
 
     <!-- Facilities Section -->
     <section class="mb-5">
-      <h2 class="display-6 fw-bold text-center mb-3">Our Facilities</h2>
+      <h2 class="display-6 fw-bold text-center mb-3 heading-underline" >Our Facilities</h2>
       <p class="text-center text-muted mb-5">We offer modern (5 star) hotel facilities for your comfort.</p>
       <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col">
@@ -44,7 +44,7 @@
         <div class="col">
           <div class="card h-100 facility-card">
             <div class="card-img-container">
-              <img src="{{ asset('img/foodsbuffet.png') }}" class="img-fluid"
+              <img src="{{ asset('img/services/food.png') }}" class="img-fluid"
                 style="width: 100%; height: 200px; object-fit: cover;" alt="Fine Dining">
             </div>
             <div class="card-body">
@@ -68,7 +68,7 @@
         <div class="col">
           <div class="card h-100 facility-card">
             <div class="card-img-container">
-              <img src="{{ asset('img/spa.png') }}" class="img-fluid"
+              <img src="{{ asset('img/services/spa.png') }}" class="img-fluid"
                 style="width: 100%; height: 200px; object-fit: cover;" alt="Spa & Wellness">
             </div>
             <div class="card-body">
@@ -106,10 +106,10 @@
   </main>
 
   <!-- Rooms Section -->
-  <section class="bg-warning bg-opacity-25 py-5 mb-5">
+  <section class="py-5 mb-5">
     <div class="container"><!-- Container inside for content alignment -->
-      <h2 class="display-6 fw-bold text-center mb-3">Luxurious Rooms</h2>
-      <p class="text-center text-muted mb-5">All rooms are designed for your comfort.</p>
+      <h2 class="display-6 fw-bold text-center mb-3 heading-underline">Luxurious Rooms</h2>
+      <p class="text-center mb-5">All rooms are designed for your comfort.</p>
       <div class="row row-cols-1 row-cols-md-3 g-4">
 
         @forelse($Rooms as $Room)

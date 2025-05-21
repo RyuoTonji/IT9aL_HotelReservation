@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller {
   public function RegisterUser(Request $request) {
     $request->validateWithBag('register', [
-      'Name' => 'required|regex:/^[A-Za-z]{0,20}+(?:\s+[A-Za-z]+(?:\.[A-Za-z]*)?)?(?:\s+[A-Za-z]+(?:\.[A-Za-z]*)?){0,4}?$/gm',
+      'Name' => 'required|regex:/^[A-Za-z]{0,20}+(?:\s+[A-Za-z]+(?:\.[A-Za-z]*)?)?(?:\s+[A-Za-z]+(?:\.[A-Za-z]*)?){0,4}?$/m',
       'Username' => 'required|unique:users|regex:/^[A-Za-z0-9]+(_[A-Za-z0-9]+)?(\.[A-Za-z0-9]+)?$/',
       'email' => 'required|email|unique:users',
       'password' => 'required|min:6|confirmed',

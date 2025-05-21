@@ -6,7 +6,7 @@
   <main class="container my-5">
     <!-- Hero Section -->
     <section class="mb-5 text-center">
-      <h1 class="display-4 fw-bold mb-3">Contact us</h1>
+      <h1 class="display-4 fw-bold mb-3 heading-underline">Contact us</h1>
       <div class="rounded overflow-hidden" style="height: 300px;">
         <img src="{{ asset('img/Contact.jpg') }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Contact Us">
       </div>
@@ -86,7 +86,7 @@
 
     <!-- Location Map Section -->
     <section class="mb-5">
-      <h2 class="display-6 fw-bold text-center mb-4">Our Location</h2>
+      <h2 class="display-6 fw-bold text-center mb-4 heading-underline">Our Location</h2>
       <div class="rounded overflow-hidden" style="height: 450px;">
         <!-- Embedding Google Maps for University of Mindanao -->
         <iframe
@@ -99,7 +99,7 @@
 
     <!-- Hotel Images Grid Section -->
     <section class="mb-5">
-      <h2 class="display-6 fw-bold text-center mb-4">Hotel Gallery</h2>
+      <h2 class="display-6 fw-bold text-center mb-4 heading-underline">Hotel Gallery</h2>
       <div class="row g-3">
         <div class="col-md-4">
           <div class="rounded overflow-hidden" style="height: 250px;">
@@ -124,7 +124,7 @@
 
     <!-- FAQ Section -->
     <section class="mb-5">
-      <h2 class="display-6 fw-bold text-center mb-4">Frequently Asked Questions</h2>
+      <h2 class="display-6 fw-bold text-center mb-4 heading-underline">Frequently Asked Questions</h2>
       <div class="row justify-content-center">
         <div class="col-lg-10">
           <div class="accordion" id="faqAccordion">
