@@ -104,10 +104,12 @@ class AdminController extends Controller {
         $q->select(\DB::raw(1))
           ->from('PaymentInfos')
           ->whereColumn('PaymentInfos.BookingDetailID', 'BookingDetails.ID')
-          ->where('PaymentInfos.PaymentStatus', 'Submitted');
+          ->whereIn('PaymentInfos.PaymentStatus', ['Submitted', 'Pending']);
       })
       ->paginate($perPage, ['*'], 'pending_page')
       ->appends(['search' => $search, 'sort' => $sort, 'direction' => $direction]);
+
+    // dd($pendingQuery);
 
     $confirmedQuery = clone $baseQuery;
     $confirmedReservations = $confirmedQuery->where('BookingDetails.BookingStatus', 'Confirmed')
@@ -143,6 +145,7 @@ class AdminController extends Controller {
 
   public function rooms(Request $request) {
     // Current date for checking active bookings
+    // Current date for checking active bookings
     $currentDate = Carbon::today();
 
     // Get search term, sort column, and sort direction
@@ -157,31 +160,18 @@ class AdminController extends Controller {
       $sort = 'RoomName';
     }
 
-    // Base query for rooms
+    \DB::enableQueryLog();
+    // Modified: Simplified all rooms query
     $query = Room::with(['roomType', 'roomSize'])
       ->leftJoin('RoomTypes', 'Rooms.RoomTypeID', '=', 'RoomTypes.ID')
       ->leftJoin('RoomSizes', 'Rooms.RoomSizeID', '=', 'RoomSizes.ID')
-      ->leftJoin('AssignedRooms', 'Rooms.ID', '=', 'AssignedRooms.RoomID')
-      ->leftJoin('BookingDetails', 'AssignedRooms.BookingDetailID', '=', 'BookingDetails.ID')
-      ->leftJoin('users', 'BookingDetails.UserID', '=', 'users.id')
       ->select(
         'Rooms.ID',
         'Rooms.RoomName',
         'Rooms.Floor',
         'RoomTypes.RoomTypeName',
-        'RoomSizes.RoomSizeName',
-        \DB::raw('IFNULL(users.name, "") as Occupant')
-      )
-      ->groupBy(
-        'Rooms.ID',
-        'Rooms.RoomName',
-        'Rooms.Floor',
-        'RoomTypes.RoomTypeName',
-        'RoomSizes.RoomSizeName',
-        'users.name'
+        'RoomSizes.RoomSizeName'
       );
-
-    // dd($query);
 
     // Apply search filter
     if ($search) {
@@ -189,8 +179,7 @@ class AdminController extends Controller {
         $q->where('Rooms.RoomName', 'like', '%' . $search . '%')
           ->orWhere('RoomTypes.RoomTypeName', 'like', '%' . $search . '%')
           ->orWhere('RoomSizes.RoomSizeName', 'like', '%' . $search . '%')
-          ->orWhere('Rooms.Floor', 'like', '%' . $search . '%')
-          ->orWhere('users.name', 'like', '%' . $search . '%');
+          ->orWhere('Rooms.Floor', 'like', '%' . $search . '%');
       });
     }
 
@@ -202,8 +191,6 @@ class AdminController extends Controller {
       $query->orderBy('RoomTypes.RoomTypeName', $direction);
     } elseif ($sort === 'RoomSizeName') {
       $query->orderBy('RoomSizes.RoomSizeName', $direction);
-    } elseif ($sort === 'Occupant') {
-      $query->orderBy('Occupant', $direction);
     } else {
       $query->orderBy('Rooms.' . $sort, $direction);
     }
@@ -215,21 +202,30 @@ class AdminController extends Controller {
       'direction' => $direction,
     ]);
 
-    // Modified: Updated status logic for all rooms
+    // Modified: Fixed status and occupant logic for all rooms
     $allRooms->getCollection()->transform(function ($room) use ($currentDate) {
       $booking = AssignedRoom::where('RoomID', $room->ID)
         ->join('BookingDetails', 'AssignedRooms.BookingDetailID', '=', 'BookingDetails.ID')
+        ->leftJoin('users', 'BookingDetails.UserID', '=', 'users.id')
         ->whereIn('BookingDetails.BookingStatus', ['Confirmed', 'Ongoing'])
-        ->whereRaw('DATE(BookingDetails.CheckInDate) <= ?', [$currentDate])
-        ->whereRaw('DATE(BookingDetails.CheckOutDate) >= ?', [$currentDate])
-        ->select('BookingDetails.BookingStatus')
+        ->where('BookingDetails.CheckInDate', '<=', $currentDate->endOfDay())
+        ->where('BookingDetails.CheckOutDate', '>=', $currentDate->startOfDay())
+        ->select(
+          'BookingDetails.BookingStatus',
+          \DB::raw('IFNULL(users.name, "") as Occupant')
+        )
         ->first();
 
       $room->status = $booking ? ($booking->BookingStatus === 'Confirmed' ? 'Pending' : 'Occupied') : 'Available';
+      $room->Occupant = $booking ? $booking->Occupant : '';
       return $room;
     });
     // End Modified
 
+    \Log::info('All Rooms Query', \DB::getQueryLog());
+    \DB::disableQueryLog();
+
+    \DB::enableQueryLog();
     // Modified: Fixed available rooms query
     $availableQuery = clone $query;
     $availableRooms = $availableQuery->whereNotIn('Rooms.ID', function ($q) use ($currentDate) {
@@ -237,13 +233,15 @@ class AdminController extends Controller {
         ->from('AssignedRooms')
         ->join('BookingDetails', 'AssignedRooms.BookingDetailID', '=', 'BookingDetails.ID')
         ->whereIn('BookingDetails.BookingStatus', ['Confirmed', 'Ongoing'])
-        ->whereRaw('DATE(BookingDetails.CheckInDate) <= ?', [$currentDate])
-        ->whereRaw('DATE(BookingDetails.CheckOutDate) >= ?', [$currentDate]);
+        ->where('BookingDetails.CheckInDate', '<=', $currentDate->endOfDay())
+        ->where('BookingDetails.CheckOutDate', '>=', $currentDate->startOfDay());
     })->paginate($perPage, ['*'], 'available_page')->appends([
       'search' => $search,
       'sort' => $sort,
       'direction' => $direction,
     ]);
+    \Log::info('Available Rooms Query', \DB::getQueryLog());
+    \DB::disableQueryLog();
 
     $availableRooms->getCollection()->transform(function ($room) {
       $room->status = 'Available';
@@ -252,9 +250,9 @@ class AdminController extends Controller {
     });
     // End Modified
 
+    \DB::enableQueryLog();
     // Modified: Fixed occupied rooms query
-    $occupiedQuery = Room::with(['roomType', 'roomSize'])
-      ->join('AssignedRooms', 'Rooms.ID', '=', 'AssignedRooms.RoomID')
+    $occupiedQuery = AssignedRoom::join('Rooms', 'AssignedRooms.RoomID', '=', 'Rooms.ID')
       ->join('BookingDetails', 'AssignedRooms.BookingDetailID', '=', 'BookingDetails.ID')
       ->join('RoomTypes', 'Rooms.RoomTypeID', '=', 'RoomTypes.ID')
       ->join('RoomSizes', 'Rooms.RoomSizeID', '=', 'RoomSizes.ID')
@@ -273,9 +271,11 @@ class AdminController extends Controller {
                   END as status')
       )
       ->whereIn('BookingDetails.BookingStatus', ['Confirmed', 'Ongoing'])
-      ->whereRaw('DATE(BookingDetails.CheckInDate) <= ?', [$currentDate])
-      ->whereRaw('DATE(BookingDetails.CheckOutDate) >= ?', [$currentDate]);
+      ->where('BookingDetails.CheckInDate', '<=', $currentDate->endOfDay())
+      ->where('BookingDetails.CheckOutDate', '>=', $currentDate->startOfDay());
 
+    \Log::info('Occupied Rooms Query', \DB::getQueryLog());
+    \DB::disableQueryLog();
     if ($search) {
       $occupiedQuery->where(function ($q) use ($search) {
         $q->where('Rooms.RoomName', 'like', '%' . $search . '%')
@@ -315,6 +315,8 @@ class AdminController extends Controller {
       'direction' => $direction,
     ]);
     // End Modified
+
+    // dd($allRooms, $availableRooms, $occupiedRooms);
 
     return view('admin.rooms', [
       'allRooms' => $allRooms,

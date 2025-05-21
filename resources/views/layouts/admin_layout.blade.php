@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ asset('css/admin/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pagination.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -122,48 +123,6 @@
         font-size: 1.1rem;
         height: 500px;
         /* Adjusted to match image proportion */
-      }
-
-      .pagination-container .pagination .page-link {
-        font-size: 0.875rem !important;
-        padding: 0.25rem 0.5rem !important;
-        line-height: 1.5 !important;
-        min-width: 1.5rem !important;
-        text-align: center !important;
-        border-radius: 0.25rem !important;
-        margin: 0 2px !important;
-        color: #007bff !important;
-        border: 1px solid #dee2e6 !important;
-      }
-
-      .pagination-container .pagination .page-item.active .page-link {
-        background-color: #007bff !important;
-        border-color: #007bff !important;
-        color: #fff !important;
-      }
-
-      .pagination-container .pagination .page-item.disabled .page-link {
-        cursor: not-allowed !important;
-        opacity: 0.65 !important;
-        color: #6c757d !important;
-      }
-
-      .pagination-container .pagination .page-item .page-link:hover {
-        background-color: #e9ecef !important;
-        border-color: #dee2e6 !important;
-      }
-
-      .pagination-container .pagination {
-        justify-content: center !important;
-        margin-top: 1rem !important;
-        font-size: 0.875rem !important;
-      }
-
-      .pagination-container,
-      .pagination-container * {
-        transform: none !important;
-        -webkit-transform: none !important;
-        -moz-transform: none !important;
       }
 
       a {

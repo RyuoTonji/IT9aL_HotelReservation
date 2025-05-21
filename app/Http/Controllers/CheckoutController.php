@@ -106,12 +106,26 @@ class CheckoutController extends Controller {
         $totalAmount *= (1 - $discount);
       }
 
-      $paymentInfo = PaymentInfos::create([
-        'BookingDetailID' => $request->BookingDetailID,
-        'TotalAmount' => $totalAmount,
-        'PaymentStatus' => 'Submitted',
-        'PaymentMethod' => $request->paymentMethod === 'gcashPaymaya' ? 'EPayment' : ucfirst($request->paymentMethod),
-      ]);
+      $paymentInfo = PaymentInfos::where('BookingDetailID', $request->BookingDetailID)->first();
+
+      if (!$paymentInfo) {
+        $paymentInfo = PaymentInfos::create([
+          'BookingDetailID' => $request->BookingDetailID,
+          'TotalAmount' => $totalAmount,
+          'PaymentStatus' => 'Submitted',
+          'PaymentMethod' => $request->paymentMethod === 'gcashPaymaya' ? 'EPayment' : ucfirst($request->paymentMethod),
+          'created_at' => now(),
+          'updated_at' => now(),
+        ]);
+      } else {
+        $paymentInfo->update([
+          'TotalAmount' => $totalAmount,
+          'PaymentStatus' => 'Submitted',
+          'PaymentMethod' => $request->paymentMethod === 'gcashPaymaya' ? 'EPayment' : ucfirst($request->paymentMethod),
+          'updated_at' => now(),
+        ]);
+      }
+
 
       if ($request->paymentMethod === 'gcashPaymaya') {
         PaymentType_EPayment::create([

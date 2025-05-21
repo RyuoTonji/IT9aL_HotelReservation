@@ -96,84 +96,89 @@
             <th class="col-5">Total Amount</th>
             <td>₱{{ number_format($booking->paymentInfo->TotalAmount, 2) }}</td>
           </tr>
-          <tr>
-            <th>Payment Status</th>
-            <td>{{ $booking->paymentInfo->PaymentStatus }}</td>
-          </tr>
-          <tr>
-            <th>Payment Method</th>
-            <td>{{ $booking->paymentInfo->PaymentMethod }}</td>
-          </tr>
-
-          @if ($booking->paymentInfo->PaymentMethod === 'Cash' && $booking->paymentInfo->cashpayment)
+          @if ($booking->paymentInfo->PaymentStatus === 'Pending')
+            <div class="alert alert-warning mt-2">
+              This customer haven't submitted their payment yet.
+            </div>
+          @elseif($booking->paymentInfo->PaymentStatus === 'Submitted')
             <tr>
-              <th>Cash Amount</th>
-              <td>₱{{ number_format($booking->paymentInfo->cash->CashAmount, 2) }}</td>
-            </tr>
-          @elseif ($booking->paymentInfo->PaymentMethod === 'Card' && $booking->paymentInfo->cardpayment)
-            <tr>
-              <th>Card Holder Name</th>
-              <td>{{ $booking->paymentInfo->card->CardHolderName ?? 'N/A' }}</td>
+              <th>Payment Status</th>
+              <td>{{ $booking->paymentInfo->PaymentStatus }}</td>
             </tr>
             <tr>
-              <th>Card Number</th>
-              <td>{{ $booking->paymentInfo->card->CardNumber }}</td>
+              <th>Payment Method</th>
+              <td>{{ $booking->paymentInfo->PaymentMethod }}</td>
             </tr>
-            <tr>
-              <th>Expiry Date</th>
-              <td>{{ $booking->paymentInfo->card->ExpiryDate }}</td>
-            </tr>
-            <tr>
-              <th>CVC</th>
-              <td>{{ $booking->paymentInfo->card->CVC ?? 'N/A' }}</td>
-            </tr>
-          @elseif ($booking->paymentInfo->PaymentMethod === 'EPayment' && $booking->paymentInfo->epayment)
-            <tr>
-              <th>Name</th>
-              <td>{{ $booking->paymentInfo->epayment->Name ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-              <th>Provider</th>
-              <td>{{ $booking->paymentInfo->epayment->Provider ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-              <th>Number</th>
-              <td>{{ $booking->paymentInfo->epayment->Number ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-              <th>Amount</th>
-              <td>₱{{ number_format($booking->paymentInfo->epayment->Amount, 2) ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-              <th>Reference Number</th>
-              <td>{{ $booking->paymentInfo->epayment->ReferenceNum ?? 'N/A' }}</td>
-            </tr>
-          @elseif ($booking->paymentInfo->PaymentMethod === 'Paypal' && $booking->paymentInfo->paypalpayment)
-            <tr>
-              <th>Name</th>
-              <td>{{ $booking->paymentInfo->paypalpayment->Name ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-              <th>Amount</th>
-              <td>{{ $booking->paymentInfo->paypalpayment->Amount ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-              <th>Reference Number</th>
-              <td>{{ $booking->paymentInfo->paypalpayment->ReferenceNum ?? 'N/A' }}</td>
-            </tr>
-          @elseif ($booking->paymentInfo->PaymentMethod === 'BankTransfer' && $booking->paymentInfo->bankTransferpayment)
-            <tr>
-              <th>Account Name</th>
-              <td>{{ $booking->paymentInfo->bankTransferpayment->AccountName ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-              <th>Account Number</th>
-              <td>{{ $booking->paymentInfo->bankTransferpayment->AccountNumber ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-              <th>Routing Number</th>
-              <td>{{ $booking->paymentInfo->bankTransferpayment->RoutingNumber ?? 'N/A' }}</td>
-            </tr>
+            @if ($booking->paymentInfo->PaymentMethod === 'Cash' && $booking->paymentInfo->cashpayment)
+              <tr>
+                <th>Cash Amount</th>
+                <td>₱{{ number_format($booking->paymentInfo->cash->CashAmount, 2) }}</td>
+              </tr>
+            @elseif ($booking->paymentInfo->PaymentMethod === 'Card' && $booking->paymentInfo->cardpayment)
+              <tr>
+                <th>Card Holder Name</th>
+                <td>{{ $booking->paymentInfo->card->CardHolderName ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Card Number</th>
+                <td>{{ $booking->paymentInfo->card->CardNumber }}</td>
+              </tr>
+              <tr>
+                <th>Expiry Date</th>
+                <td>{{ $booking->paymentInfo->card->ExpiryDate }}</td>
+              </tr>
+              <tr>
+                <th>CVC</th>
+                <td>{{ $booking->paymentInfo->card->CVC ?? 'N/A' }}</td>
+              </tr>
+            @elseif ($booking->paymentInfo->PaymentMethod === 'EPayment' && $booking->paymentInfo->epayment)
+              <tr>
+                <th>Name</th>
+                <td>{{ $booking->paymentInfo->epayment->Name ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Provider</th>
+                <td>{{ $booking->paymentInfo->epayment->Provider ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Number</th>
+                <td>{{ $booking->paymentInfo->epayment->Number ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Amount</th>
+                <td>₱{{ number_format($booking->paymentInfo->epayment->Amount, 2) ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Reference Number</th>
+                <td>{{ $booking->paymentInfo->epayment->ReferenceNum ?? 'N/A' }}</td>
+              </tr>
+            @elseif ($booking->paymentInfo->PaymentMethod === 'Paypal' && $booking->paymentInfo->paypalpayment)
+              <tr>
+                <th>Name</th>
+                <td>{{ $booking->paymentInfo->paypalpayment->Name ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Amount</th>
+                <td>{{ $booking->paymentInfo->paypalpayment->Amount ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Reference Number</th>
+                <td>{{ $booking->paymentInfo->paypalpayment->ReferenceNum ?? 'N/A' }}</td>
+              </tr>
+            @elseif ($booking->paymentInfo->PaymentMethod === 'BankTransfer' && $booking->paymentInfo->bankTransferpayment)
+              <tr>
+                <th>Account Name</th>
+                <td>{{ $booking->paymentInfo->bankTransferpayment->AccountName ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Account Number</th>
+                <td>{{ $booking->paymentInfo->bankTransferpayment->AccountNumber ?? 'N/A' }}</td>
+              </tr>
+              <tr>
+                <th>Routing Number</th>
+                <td>{{ $booking->paymentInfo->bankTransferpayment->RoutingNumber ?? 'N/A' }}</td>
+              </tr>
+            @endif
           @endif
         </table>
       @else
