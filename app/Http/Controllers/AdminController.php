@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-<<<<<<< HEAD
+]
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller {
@@ -52,7 +52,6 @@ class AdminController extends Controller {
       abort(69420, 'Unauthorized action.');
     }
   }
-=======
 
 class AdminController extends Controller
 {
@@ -95,5 +94,4 @@ class AdminController extends Controller
     {
         return view('admin.booking');
     }
->>>>>>> 315a6fc3ef544ade10ca14731ef09ec41feee53c
-}
+
