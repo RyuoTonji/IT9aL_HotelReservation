@@ -3,20 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RoomType extends Model {
   protected $table = 'RoomTypes';
-
   protected $primaryKey = 'ID';
-
   protected $fillable = [
     'RoomTypeName',
     'RoomDescription',
     'RoomPrice',
     'SucceedingNights',
-    'RoomCapacity',
     'ImagePathname',
     'ImageName',
     'MimeType',
@@ -27,7 +22,11 @@ class RoomType extends Model {
     'SucceedingNights' => 'decimal:2',
   ];
 
-  public function bookingDetails(): HasMany {
-    return $this->hasMany(Booking::class, 'ID', 'ID');
+  public function bookings() {
+    return $this->hasMany(Booking::class, 'RoomTypeID', 'ID');
+  }
+
+  public function rooms() {
+    return $this->hasMany(Room::class, 'RoomTypeID', 'ID');
   }
 }

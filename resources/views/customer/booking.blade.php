@@ -164,15 +164,16 @@
             <label for="roomType">Room Type</label>
             <select class="form-control" id="roomType" name="RoomType" required
               @if ($HasPendingBooking) disabled @endif>
-              <option value="" disabled {{ old('RoomType') ? '' : 'selected' }}>Select Room Type</option>
+              <option value="" disabled {{ !old('RoomType') && !$ChosenRoom ? 'selected' : '' }}>Select Room Type
+              </option>
               @forelse ($RoomTypes as $roomType)
                 <option value="{{ $roomType->RoomTypeName }}"
-                  {{ old('RoomType') == $roomType->RoomTypeName ? 'selected' : '' }}>
-                  {{ $roomType->RoomTypeName }} Room</option>
+                  {{ old('RoomType', $ChosenRoom) == $roomType->RoomTypeName ? 'selected' : '' }}>
+                  {{ $roomType->RoomTypeName }} Room
+                </option>
               @empty
                 <option value="" disabled selected>No Room Types Available</option>
               @endforelse
-
             </select>
             @error('RoomType')
               <div class="alert alert-danger mt-2">{{ $message }}</div>

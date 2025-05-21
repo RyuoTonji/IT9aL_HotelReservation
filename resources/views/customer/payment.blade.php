@@ -22,7 +22,7 @@
         </div>
         <div class="detail-group">
           <label>Room Type:</label>
-          <span>{{ $booking->room->RoomTypeName }}</span>
+          <span>{{ $booking->roomType->RoomTypeName }}</span>
         </div>
         <div class="detail-group">
           <label>Room Size:</label>
@@ -35,10 +35,10 @@
         <div class="detail-group">
           <label>Services:</label>
           <span>
-            @if ($booking->services->isEmpty())
+            @if ($booking->servicesAdded->isEmpty())
               None
             @else
-              {{ $booking->services->pluck('ServiceName')->implode(', ') }}
+              {{ $booking->servicesAdded->pluck('ServiceName')->implode(', ') }}
             @endif
           </span>
         </div>
@@ -59,7 +59,7 @@
           @if ($costDetails->Nights > 1)
             <tr>
               <td>Succeeding Nights ({{ $costDetails->Nights - 1 }} x
-                {{ number_format($booking->room->SucceedingNights, 2) }})</td>
+                {{ number_format($booking->roomType->SucceedingNights, 2) }})</td>
               <td>{{ number_format($costDetails->RoomSucceedingNightsPrice, 2) }}</td>
             </tr>
           @endif

@@ -15,6 +15,6 @@ class PaymentType_BankTransfer extends Model {
   ];
 
   public function paymentInfo() {
-    $this->belongsTo(PaymentInfo::class, 'PaymentInfoID', 'ID');
+    $this->belongsTo(PaymentInfos::class, 'PaymentInfoID', 'ID');
   }
 }

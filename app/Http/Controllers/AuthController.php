@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller {
   public function RegisterUser(Request $request) {
     $request->validateWithBag('register', [
-      'Name' => 'required|regex:/^[A-Za-z]{0,20}+(?:\s+[A-Za-z]+(?:\.[A-Za-z]*)?)?(?:\s+[A-Za-z]+(?:\.[A-Za-z]*)?){0,4}?$/gm',
+      'Name' => 'required|regex:/^[A-Za-z]+(?:\s+[A-Za-z]+(?:\.[A-Za-z]*)?)?(?:\s+[A-Za-z]+(?:\.[A-Za-z]*)?){0,4}?$/m',
       'Username' => 'required|unique:users|regex:/^[A-Za-z0-9]+(_[A-Za-z0-9]+)?(\.[A-Za-z0-9]+)?$/',
       'email' => 'required|email|unique:users',
       'password' => 'required|min:6|confirmed',
       'password_confirmation' => 'required|min:6',
     ], [
       'Name.required' => 'The name field is required.',
-      'Name.regex' => 'The name must be a valid name format, optional Surname or Middle Initial.',
+      'Name.regex' => 'The name must be a valid name format, with optional Surname or Middle Initial.',
       'Username.required' => 'The username field is required.',
       'Username.unique' => 'This username is already taken.',
       'Username.regex' => 'The username must contain only letters, numbers, one optional underscore, and one optional dot (e.g., "john_doe.123"). No spaces or other special characters are allowed.',
