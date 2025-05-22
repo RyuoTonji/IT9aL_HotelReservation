@@ -42,6 +42,14 @@ return new class extends Migration {
       $table->decimal('TotalAmount', 20, 2); // Final total after discount
       $table->timestamps();
     });
+
+    Schema::create('AssignedRooms', function (Blueprint $table) {
+      $table->id('ID');
+      $table->foreignId('BookingDetailID')->constrained('BookingDetails', 'ID')->onDelete('cascade');
+      $table->foreignId('RoomID')->constrained('Rooms', 'ID')->onDelete('cascade');
+      $table->enum('Status', ['Ongoing', 'Ended']);
+      $table->timestamps();
+    });
   }
 
   /**

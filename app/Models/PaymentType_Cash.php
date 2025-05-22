@@ -15,6 +15,6 @@ class PaymentType_Cash extends Model {
   ];
 
   public function paymentInfo() {
-    return $this->belongsTo(PaymentInfo::class, 'PaymentInfoID', 'ID');
+    return $this->belongsTo(PaymentInfos::class, 'PaymentInfoID', 'ID');
   }
 }

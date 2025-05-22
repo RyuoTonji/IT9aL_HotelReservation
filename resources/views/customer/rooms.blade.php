@@ -32,22 +32,26 @@
     <section class="mb-5">
       <div class="row row-cols-1 row-cols-md-3 g-4">
         @forelse($Rooms as $room)
-          <div class="col">
-            <div class="card h-100 room-card">
-              <div class="bg-light text-center" style="height: 200px; overflow: hidden;">
-                <img src="{{ asset($room->ImagePathname) }}" class="img-fluid"
-                  style="width: 100%; height: 100%; object-fit: cover;" alt="Deluxe King Room">
-              </div>
-              <div class="card-body">
-                <h3 class="card-title fs-5">{{ $room->RoomTypeName }}</h3>
-                <p class="card-text">{{ $room->RoomDescription }}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="fw-bold">₱{{ $room->RoomPrice }}/night</span>
-                  <a href="booking.php" class="btn btn-primary">Book Now</a>
+          <form action="{{ route('booking') }}" method="POST">
+            @csrf
+            <input type="hidden" name="ChosenRoom" value="{{ $room->RoomTypeName }}">
+            <div class="col">
+              <div class="card h-100 room-card">
+                <div class="bg-light text-center" style="height: 200px; overflow: hidden;">
+                  <img src="{{ asset($room->ImagePathname) }}" class="img-fluid"
+                    style="width: 100%; height: 100%; object-fit: cover;" alt="{{ $room->RoomTypeName }} Room">
+                </div>
+                <div class="card-body">
+                  <h3 class="card-title fs-5">{{ $room->RoomTypeName }} Suite</h3>
+                  <p class="card-text">{{ $room->RoomDescription }}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">₱{{ number_format($room->RoomPrice, 2) }}/night</span>
+                    <button type="submit" class="btn btn-primary">Book Now</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </form>
         @empty
           <div class="col">
             <div class="card h-100 room-card">

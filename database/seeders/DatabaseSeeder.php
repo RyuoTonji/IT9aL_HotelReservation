@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder {
       UserSeeder::class,
       RoomSizeSeeder::class,
       RoomTypeSeeder::class,
+      RoomSeeder::class,
       ServiceSeeder::class,
       CashbackThresholdSeeder::class,
       LoyaltyTierSeeder::class,

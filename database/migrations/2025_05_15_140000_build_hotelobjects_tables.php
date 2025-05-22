@@ -23,13 +23,21 @@ return new class extends Migration {
       $table->id('ID');
       $table->string('RoomTypeName')->unique();
       $table->text('RoomDescription')->nullable();
-      $table->integer('RoomCapacity')->default(1);
+      // $table->integer('RoomCapacity')->default(1);
       $table->decimal('RoomPrice', 20, 2);
       $table->decimal('SucceedingNights', 20, 2);
       $table->string('ImagePathname')->nullable();
       $table->string('ImageName')->nullable();
       $table->string('MimeType')->nullable();
       $table->timestamps();
+    });
+
+    Schema::create('Rooms', function (Blueprint $table) {
+      $table->id('ID');
+      $table->string('RoomName')->unique();
+      $table->foreignId('RoomTypeID')->constrained('RoomTypes', 'ID')->onDelete('cascade');
+      $table->foreignId('RoomSizeID')->constrained('RoomSizes', 'ID')->onDelete('cascade');
+      $table->string('Floor');
     });
 
     Schema::create('Services', function (Blueprint $table) {
@@ -67,11 +75,11 @@ return new class extends Migration {
    * Reverse the migrations.
    */
   public function down(): void {
-    Schema::dropIfExists('RoomSizeTypes');
+    Schema::dropIfExists('RoomSizes');
     Schema::dropIfExists('RoomTypes');
+    Schema::dropIfExists('Rooms');
     Schema::dropIfExists('Services');
     Schema::dropIfExists('CashbackThresholds');
     Schema::dropIfExists('LoyaltyTiers');
-
   }
 };

@@ -19,6 +19,6 @@ class PaymentType_Paypal extends Model {
   ];
 
   public function paymentInfo() {
-    $this->belongsTo(PaymentInfo::class, 'PaymentInfoID', 'ID');
+    $this->belongsTo(PaymentInfos::class, 'PaymentInfoID', 'ID');
   }
 }

@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\CashbackThreshold;
-use App\Models\PaymentInfo;
-use App\Models\PaymentType_Cash;
+use App\Models\PaymentInfos;
+use App\Models\PaymentType_BankTransfer;
 use App\Models\PaymentType_Card;
-use App\Models\PaymentType_GCash;
+use App\Models\PaymentType_Paypal;
 use App\Models\LoyaltyPointTransaction;
 use App\Models\LoyaltyTier;
 use App\Models\PaymentType_EPayment;
@@ -19,101 +19,77 @@ use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller {
   public function CheckoutForm(Request $request) {
-    $bookingDetailID = $request->session()->get('bookingDetailID');
-    $totalAmount = $request->session()->get('totalAmount');
+    $booking = null;
+    $costDetails = null;
+    $tier = null;
 
-    // dd($bookingDetailID, $totalAmount);
-
-    if (!$bookingDetailID || !$totalAmount) {
-      return redirect()->route('booking')->with('toast_error', 'No booking information available.');
+    // Try session BookingID first
+    $bookingID = session('BookingID');
+    if ($bookingID) {
+      $booking = Booking::with(['roomType', 'roomSize', 'servicesAdded', 'costDetails'])
+        ->where('ID', $bookingID)
+        ->where('UserID', Auth::id())
+        ->first();
     }
-
-    $booking = Booking::with(['room', 'roomSize', 'services'])
-      ->where('ID', $bookingDetailID)
-      ->where('UserID', Auth::id())
-      ->where('BookingStatus', 'Pending')
-      ->first();
-
     // dd($booking);
 
+    // If no session booking, get latest pending booking
     if (!$booking) {
-      return redirect()->route('booking')->with('toast_error', 'Invalid or completed booking.');
+      $booking = Booking::with(['roomType', 'roomSize', 'servicesAdded', 'costDetails'])
+        ->where('UserID', Auth::id())
+        ->where('BookingStatus', 'Pending')
+        ->orderBy('created_at', 'desc')
+        ->first();
     }
 
-    // dd($booking);
+    if ($booking) {
+      $costDetails = $booking->costDetails;
+      $userLoyalty = UserLoyalty::where('UserID', Auth::id())->first();
+      if ($userLoyalty && $userLoyalty->LoyaltyTierID) {
+        $tier = LoyaltyTier::where('ID', $userLoyalty->LoyaltyTierID)->first();
+      }
 
-    // Calculate costs
-    $roomPrice = $booking->room->RoomPrice;
-    $guestFee = $booking->roomSize->PricePerPerson * $booking->NumberOfGuests;
-    $serviceCost = $booking->services->sum('ServicePrice');
-    $subtotal = $roomPrice + $guestFee + $serviceCost;
-    $discount = 0;
-    $discountPercent = 0;
-    $userLoyalty = Auth::user()->Loyalty;
-
-    // dd($userLoyalty);
-
-    if ($userLoyalty && $userLoyalty->LoyaltyTierID) {
-      $tier = $userLoyalty->loyaltyTier;
-      $discountPercent = $tier->Discount;
-      $discount = $subtotal * ($tier->Discount / 100);
+      $request->session()->put('BookingID', $booking->ID);
     }
-    $totalAmount = $subtotal - $discount;
 
-    // Validate totalAmount matches
-    // if (abs($totalAmount - $totalAmount) > 0.01) {
-    //   return redirect()->route('booking.details')->with('toast_error', 'Invalid total amount.');
-    // }
-
-    // Calculate potential points
-    $potentialPoints = 0;
-    $cashback = CashbackThreshold::where('MinPaidAmount', '<=', $totalAmount)
-      ->orderBy('MinPaidAmount', 'desc')
-      ->first();
-
-    if ($cashback) {
-      $potentialPoints = $totalAmount * ($cashback->CashbackPercentile / 100);
-    }
-    // dd($booking, $subtotal, $discount, $discountPercent, $totalAmount, $potentialPoints);
-
-    return view('customer.checkout', [
+    return view('customer.payment', [
+      'title' => 'Booking Details',
+      'tier' => $tier,
       'booking' => $booking,
-      'subtotal' => $subtotal,
-      'discount' => $discount,
-      'discountPercent' => $discountPercent,
-      'totalAmount' => $totalAmount,
-      'potentialPoints' => $potentialPoints,
+      'costDetails' => $costDetails,
+      'PaymentProcessed' => $booking ? PaymentInfos::where('BookingDetailID', $booking->ID)
+        ->where('PaymentStatus', 'Submitted')
+        ->first() : null,
     ]);
   }
   public function ProcessPayment(Request $request) {
-    $bookingDetailID = $request->session()->get('bookingDetailID');
-    $totalAmount = $request->session()->get('totalAmount');
-
+    // dd($request);
     $rules = [
       'BookingDetailID' => 'required|exists:BookingDetails,ID',
       'TotalAmount' => 'required|numeric|min:0',
-      'PaymentMethod' => 'required|in:Cash,Card,Gcash',
+      'paymentMethod' => 'required|in:gcashPaymaya,paypal,creditCard,bankTransfer',
     ];
 
-    if ($request->PaymentMethod === 'Cash') {
-      $rules['CashAmount'] = 'required|numeric|min:0';
-    } elseif ($request->PaymentMethod === 'Card') {
+    if ($request->paymentMethod === 'gcashPaymaya') {
+      $rules['ECashMobileNum'] = 'required|string|max:11|regex:/^09\d{9}$/';
+      $rules['ECashReference'] = 'required|string|max:20';
+    } elseif ($request->paymentMethod === 'paypal') {
+      $rules['PaypalReference'] = 'required|string|max:255';
+    } elseif ($request->paymentMethod === 'creditCard') {
+      $rules['CardNumber'] = 'required|string|regex:/^\d{16}$/';
       $rules['CardName'] = 'required|string|max:255';
-      $rules['CardCardNumber'] = 'required|string|regex:/^\d{16}$/';
       $rules['CardExpiry'] = 'required|string|regex:/^\d{2}\/\d{2}$/';
       $rules['CardCVC'] = 'required|string|regex:/^\d{3,4}$/';
-    } elseif ($request->PaymentMethod === 'Gcash') {
-      $rules['GcashName'] = 'required|string|max:255';
-      $rules['GcashNumber'] = 'required|string|regex:/^09\d{9}$/';
-      $rules['GcashAmount'] = 'required|numeric|min:0';
-      $rules['GcashReceipt'] = 'required|string|max:255';
+    } elseif ($request->paymentMethod === 'bankTransfer') {
+      $rules['AccountName'] = 'required|string|max:255';
+      $rules['AccountNumber'] = 'required|string|max:255';
+      $rules['RoutingNumber'] = 'required|string|max:255';
     }
 
     $validator = Validator::make($request->all(), $rules);
+    // dd($validator);
     if ($validator->fails()) {
-      return back()
-        ->withErrors($validator)
-        ->withInput();
+      return back()->withErrors($validator)->withInput($request->all());
     }
 
     DB::beginTransaction();
@@ -123,40 +99,61 @@ class CheckoutController extends Controller {
         ['LoyaltyPoints' => 0, 'LoyaltyTierID' => null]
       );
 
-      $totalAmount = $request->session()->get('totalAmount');
+      $totalAmount = $request->TotalAmount;
       if ($userLoyalty->LoyaltyTierID) {
         $tier = LoyaltyTier::find($userLoyalty->LoyaltyTierID);
         $discount = $tier->Discount / 100;
-        $totalAmount *= 1 - $discount;
+        $totalAmount *= (1 - $discount);
       }
 
-      $paymentInfo = PaymentInfo::create([
-        'BookingDetailID' => $request->session()->get('bookingDetailID'),
-        'TotalAmount' => $request->session()->get('totalAmount'),
-        'PaymentStatus' => 'Pending',
-        'PaymentMethod' => $request->PaymentMethod,
-      ]);
+      $paymentInfo = PaymentInfos::where('BookingDetailID', $request->BookingDetailID)->first();
 
-      if ($request->PaymentMethod === 'Cash') {
-        PaymentType_Cash::create([
-          'PaymentInfoID' => $paymentInfo->ID,
-          'CashAmount' => $request->input('CashAmount'),
+      if (!$paymentInfo) {
+        $paymentInfo = PaymentInfos::create([
+          'BookingDetailID' => $request->BookingDetailID,
+          'TotalAmount' => $totalAmount,
+          'PaymentStatus' => 'Submitted',
+          'PaymentMethod' => $request->paymentMethod === 'gcashPaymaya' ? 'EPayment' : ucfirst($request->paymentMethod),
+          'created_at' => now(),
+          'updated_at' => now(),
         ]);
-      } elseif ($request->PaymentMethod === 'Card') {
-        PaymentType_Card::create([
-          'PaymentInfoID' => $paymentInfo->ID,
-          'Name' => $request->input('CardName'),
-          'CardNumber' => $request->input('CardNumber'),
-          'Expiry' => $request->input('CardExpiry'),
-          'CVC' => $request->input('CardCVC'),
+      } else {
+        $paymentInfo->update([
+          'TotalAmount' => $totalAmount,
+          'PaymentStatus' => 'Submitted',
+          'PaymentMethod' => $request->paymentMethod === 'gcashPaymaya' ? 'EPayment' : ucfirst($request->paymentMethod),
+          'updated_at' => now(),
         ]);
-      } elseif ($request->PaymentMethod === 'Gcash') {
+      }
+
+
+      if ($request->paymentMethod === 'gcashPaymaya') {
         PaymentType_EPayment::create([
           'PaymentInfoID' => $paymentInfo->ID,
-          'Name' => $request->input('GcashName'),
-          'Number' => $request->input('GcashNumber'),
-          'Amount' => $request->input('GcashAmount'),
-          'ReceiptNumber' => $request->input('GcashReceipt'),
+          'Number' => $request->ECashMobileNum,
+          'ReferenceNum' => $request->ECashReference,
+          'Amount' => $totalAmount,
+        ]);
+      } elseif ($request->paymentMethod === 'paypal') {
+        PaymentType_Paypal::create([
+          'PaymentInfoID' => $paymentInfo->ID,
+          'ReferenceNum' => $request->PaypalReference,
+          'Amount' => $totalAmount,
+        ]);
+      } elseif ($request->paymentMethod === 'creditCard') {
+        PaymentType_Card::create([
+          'PaymentInfoID' => $paymentInfo->ID,
+          'CardHolderName' => $request->CardName,
+          'CardNumber' => $request->CardNumber,
+          'ExpiryDate' => $request->CardExpiry,
+          'CVC' => $request->CardCVC,
+        ]);
+      } elseif ($request->paymentMethod === 'bankTransfer') {
+        PaymentType_BankTransfer::create([
+          'PaymentInfoID' => $paymentInfo->ID,
+          'AccountName' => $request->AccountName,
+          'AccountNumber' => $request->AccountNumber,
+          'RoutingNumber' => $request->RoutingNumber,
         ]);
       }
 
@@ -176,18 +173,16 @@ class CheckoutController extends Controller {
         ]);
       }
 
-      // Update loyalty tier
       $newTier = LoyaltyTier::where('MinPoints', '<=', $userLoyalty->LoyaltyPoints)
         ->orderBy('MinPoints', 'desc')
         ->first();
       if ($newTier && $newTier->ID != $userLoyalty->LoyaltyTierID) {
         $userLoyalty->update(['LoyaltyTierID' => $newTier->ID]);
       }
-      // Update PaymentStatus based on processing (e.g., API call for Card/Gcash)
-      $paymentInfo->update(['PaymentStatus' => 'Completed']); // Exampleche
 
       DB::commit();
-      return redirect()->route('booking')->with('toast_success', 'Payment processed successfully!');
+      $request->session()->forget(['BookingID', 'TotalAmount']);
+      return redirect()->route('booking')->with('toast_success', 'Payment submitted successfully!');
     } catch (\Exception $e) {
       DB::rollBack();
       return back()->with('toast_error', 'Payment failed: ' . $e->getMessage());

@@ -14,4 +14,12 @@ class RoomSize extends Model {
     'PricePerPerson' => 'decimal:2',
     'RoomSizePrice' => 'decimal:2',
   ];
+
+  public function rooms() {
+    return $this->hasMany(Room::class, 'RoomSizeID', 'ID');
+  }
+
+  public function bookings() {
+    return $this->hasMany(Booking::class, 'RoomSizeID', 'ID');
+  }
 }

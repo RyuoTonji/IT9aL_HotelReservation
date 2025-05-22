@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PaymentInfo extends Model {
+class PaymentInfos extends Model {
   protected $table = 'PaymentInfos';
 
   protected $primaryKey = 'ID';
@@ -37,6 +37,10 @@ class PaymentInfo extends Model {
 
   public function ePayment() {
     return $this->hasOne(PaymentType_EPayment::class, 'PaymentInfoID');
+  }
+
+  public function paypalPayment() {
+    return $this->hasOne(PaymentType_Paypal::class, 'PaymentInfoID');
   }
 
   public function bankTransferPayment() {
