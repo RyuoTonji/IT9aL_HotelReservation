@@ -34,6 +34,14 @@ class PageController extends Controller {
   }
 
   public function booking(Request $request) {
+    $activeBooking = Booking::where('UserID', Auth::id())
+      ->whereIn('BookingStatus', ['Confirmed', 'Ongoing'])
+      ->exists();
+
+    if ($activeBooking) {
+      return redirect()->route('reservation')->with('toast_info', 'You have an active reservation.');
+    }
+
     $ChosenRoom = $request->input('ChosenRoom');
 
     // Validate ChosenRoom against RoomType names
@@ -52,6 +60,25 @@ class PageController extends Controller {
         ->orderBy('created_at', 'desc')
         ->first(),
       'ChosenRoom' => $ChosenRoom,
+    ]);
+  }
+
+  public function Reservation() {
+    $reservation = Booking::with(['roomType', 'roomSize', 'servicesAdded', 'costDetails', 'assignedRooms.room'])
+      ->where('UserID', Auth::id())
+      ->whereIn('BookingStatus', ['Confirmed', 'Ongoing'])
+      ->whereHas('paymentInfo', function ($query) {
+        $query->where('PaymentStatus', 'Verified');
+      })
+      ->whereHas('assignedRooms', function ($query) {
+        $query->whereNotNull('RoomID');
+      })
+      ->orderBy('created_at', 'desc')
+      ->first();
+
+    return view('customer.reservation', [
+      'title' => 'Reservation',
+      'reservation' => $reservation,
     ]);
   }
 }
