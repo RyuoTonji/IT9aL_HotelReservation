@@ -6,7 +6,7 @@
   <main class="container my-5">
     <!-- Hero Section -->
     <section class="mb-5 text-center">
-      <h1 class="display-4 fw-bold mb-3 heading-underline">Contact us</h1>
+      <h1 class="display-4 fw-bold mb-3">Contact us</h1>
       <div class="rounded overflow-hidden" style="height: 300px;">
         <img src="{{ asset('img/Contact.jpg') }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Contact Us">
       </div>
@@ -86,12 +86,16 @@
 
     <!-- Location Map Section -->
     <section class="mb-5">
-      <h2 class="display-6 fw-bold text-center mb-4 heading-underline">Our Location</h2>
+      <h2 class="display-6 fw-bold text-center mb-4">Our Location</h2>
       <div class="rounded overflow-hidden" style="height: 450px;">
         <!-- Embedding Google Maps for University of Mindanao -->
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.4935967000934!2d125.59977107462665!3d7.065507616755267!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f96d60230d0025%3A0x99c208fad5d6862d!2sUniversity%20of%20Mindanao!5e0!3m2!1sen!2sph!4v1716027879809!5m2!1sen!2sph"
-          width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.4935967000934!2d125.59977107462665!3d7.065507616755267!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f96d60230d0025%3A0x99c208fad5d6862d!2sUniversity%20of%20Mindanao!5e0!3m2!1sen!2sph!4v1716027879809!5m2!1sen!2sph" 
+          width="100%" 
+          height="100%" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy"
           referrerpolicy="no-referrer-when-downgrade">
         </iframe>
       </div>
@@ -99,32 +103,29 @@
 
     <!-- Hotel Images Grid Section -->
     <section class="mb-5">
-      <h2 class="display-6 fw-bold text-center mb-4 heading-underline">Hotel Gallery</h2>
+      <h2 class="display-6 fw-bold text-center mb-4">Hotel Gallery</h2>
       <div class="row g-3">
         <div class="col-md-4">
           <div class="rounded overflow-hidden" style="height: 250px;">
-            <img src="{{ asset('img/heroimage.jpg') }}" class="img-fluid w-100 h-100" style="object-fit: cover;"
-              alt="Hotel Lobby">
+            <img src="{{ asset('img/heroimage.jpg') }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Hotel Lobby">
           </div>
         </div>
         <div class="col-md-4">
           <div class="rounded overflow-hidden" style="height: 250px;">
-            <img src="{{ asset('img/DeluxeRoom.jpg') }}" class="img-fluid w-100 h-100" style="object-fit: cover;"
-              alt="Deluxe Room">
+            <img src="{{ asset('img/DeluxeRoom.jpg') }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Deluxe Room">
           </div>
         </div>
         <div class="col-md-4">
           <div class="rounded overflow-hidden" style="height: 250px;">
-            <img src="{{ asset('img/pool.jpg') }}" class="img-fluid w-100 h-100" style="object-fit: cover;"
-              alt="Swimming Pool">
+            <img src="{{ asset('img/pool.jpg') }}" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Swimming Pool">
           </div>
         </div>
       </div>
     </section>
-
+    
     <!-- FAQ Section -->
     <section class="mb-5">
-      <h2 class="display-6 fw-bold text-center mb-4 heading-underline">Frequently Asked Questions</h2>
+      <h2 class="display-6 fw-bold text-center mb-4">Frequently Asked Questions</h2>
       <div class="row justify-content-center">
         <div class="col-lg-10">
           <div class="accordion" id="faqAccordion">
@@ -136,36 +137,31 @@
               </h3>
               <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                 <div class="accordion-body">
-                  Check-in time is 2:00 PM and check-out time is 12:00 PM. Early check-in and late check-out may be
-                  available upon request, subject to availability and additional charges.
+                  Check-in time is 2:00 PM and check-out time is 12:00 PM. Early check-in and late check-out may be available upon request, subject to availability and additional charges.
                 </div>
               </div>
             </div>
             <div class="accordion-item">
               <h3 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                  data-bs-target="#faq2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
                   Do you offer airport transfers?
                 </button>
               </h3>
               <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                 <div class="accordion-body">
-                  Yes, we offer airport transfer services at additional cost. Please contact our concierge team at least
-                  24 hours before your arrival to arrange this service.
+                  Yes, we offer airport transfer services at additional cost. Please contact our concierge team at least 24 hours before your arrival to arrange this service.
                 </div>
               </div>
             </div>
             <div class="accordion-item">
               <h3 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                  data-bs-target="#faq3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
                   What amenities are included with my stay?
                 </button>
               </h3>
               <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                 <div class="accordion-body">
-                  All room bookings include complimentary Wi-Fi, access to our fitness center, swimming pool, and daily
-                  breakfast buffet. Premium room categories may include additional amenities.
+                  All room bookings include complimentary Wi-Fi, access to our fitness center, swimming pool, and daily breakfast buffet. Premium room categories may include additional amenities.
                 </div>
               </div>
             </div>

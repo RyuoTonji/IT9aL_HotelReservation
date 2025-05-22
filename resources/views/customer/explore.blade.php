@@ -11,7 +11,7 @@
       <div class="position-absolute top-0 left-0 w-100 h-100 bg-dark" style="opacity: 0.5;"></div>
     </div>
     <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-      <h1 class="display-4 fw-bold mb-3 text-white">Take a Tour</h1>
+      <h1 class="display-4 fw-bold mb-3 text-white heading-underline">Take a Tour</h1>
       <p class="lead text-white">Discover our world-class accommodations and amenities for an unforgettable stay.</p>
     </div>
   </section>

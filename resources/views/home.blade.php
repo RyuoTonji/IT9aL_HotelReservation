@@ -5,7 +5,21 @@
 @section('content')
 
   <main class="container my-5">
-    <link rel="stylesheet" href="{{ asset('css/customer/home.css') }}">
+
+    <style>
+    .room-card, .facility-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    .room-card:hover, .facility-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);    
+    }
+    .card-img-container {
+      overflow: hidden;
+    }
+  </style>
 
     <!-- Hero Section -->
     <section class="row align-items-center mb-5">
@@ -26,7 +40,7 @@
 
     <!-- Facilities Section -->
     <section class="mb-5">
-      <h2 class="display-6 fw-bold text-center mb-3 heading-underline" >Our Facilities</h2>
+      <h2 class="display-6 fw-bold text-center mb-3">Our Facilities</h2>
       <p class="text-center text-muted mb-5">We offer modern (5 star) hotel facilities for your comfort.</p>
       <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col">
@@ -44,7 +58,7 @@
         <div class="col">
           <div class="card h-100 facility-card">
             <div class="card-img-container">
-              <img src="{{ asset('img/services/food.png') }}" class="img-fluid"
+              <img src="{{ asset('img/foodsbuffet.png') }}" class="img-fluid"
                 style="width: 100%; height: 200px; object-fit: cover;" alt="Fine Dining">
             </div>
             <div class="card-body">
@@ -68,7 +82,7 @@
         <div class="col">
           <div class="card h-100 facility-card">
             <div class="card-img-container">
-              <img src="{{ asset('img/services/spa.png') }}" class="img-fluid"
+              <img src="{{ asset('img/spa.png') }}" class="img-fluid"
                 style="width: 100%; height: 200px; object-fit: cover;" alt="Spa & Wellness">
             </div>
             <div class="card-body">
@@ -103,44 +117,67 @@
         </div>
       </div>
     </section>
-  </main>
+    </main>
 
-  <!-- Rooms Section -->
-  <section class="py-5 mb-5">
+    <!-- Rooms Section -->
+    <section class="bg-warning bg-opacity-25 py-5 mb-5">
     <div class="container"><!-- Container inside for content alignment -->
-      <h2 class="display-6 fw-bold text-center mb-3 heading-underline">Luxurious Rooms</h2>
-      <p class="text-center mb-5">All rooms are designed for your comfort.</p>
+      <h2 class="display-6 fw-bold text-center mb-3">Luxurious Rooms</h2>
+      <p class="text-center text-muted mb-5">All rooms are designed for your comfort.</p>
       <div class="row row-cols-1 row-cols-md-3 g-4">
-
-        @forelse($Rooms as $Room)
-          <div class="col">
-            <div class="card h-100 room-card">
-              <div class="card-img-container">
-                <img src="{{ asset($Room->ImagePathname) }}" class="img-fluid"
-                  style="width: 100%; height: 200px; object-fit: cover;" alt="Deluxe King Room">
-              </div>
-              <div class="card-body">
-                <h3 class="card-title fs-5">{{ $Room->RoomTypeName }} Suite</h3>
-                <p class="card-text">{{ $Room->RoomDescription }}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="fw-bold">₱{{ $Room->RoomPrice }}/night</span>
-                  <a href="booking.php" class="btn btn-primary">Book Now</a>
-                </div>
+        <div class="col">
+          <div class="card h-100 room-card">
+            <div class="card-img-container">
+              <img src="{{ asset('img/DeluxeRoom.jpg') }}" class="img-fluid"
+                style="width: 100%; height: 200px; object-fit: cover;" alt="Deluxe King Room">
+            </div>
+            <div class="card-body">
+              <h3 class="card-title fs-5">Deluxe Suite</h3>
+              <p class="card-text">Experience elegance in our Deluxe King Room, featuring a plush king-sized bed, modern
+                amenities, and a private balcony with city views.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold">₱30,000/night</span>
+                <a href="booking.php" class="btn btn-primary">Book Now</a>
               </div>
             </div>
           </div>
-        @empty
-          <div class="col">
-            <div class="card h-100 room-card>
-              <div class="card-body">
-              <h3 class="card-title fs-5">No Rooms Available</h3>
-              <p class="card-text">No Rooms is currently being offered. Please check back later.</p>
+        </div>
+        <div class="col">
+          <div class="card h-100 room-card">
+            <div class="card-img-container">
+              <img src="{{ asset('img/SuperioRoom.png') }}" class="img-fluid"
+                style="width: 100%; height: 200px; object-fit: cover;" alt="Executive Suite">
+            </div>
+            <div class="card-body">
+              <h3 class="card-title fs-5">Executive Suite</h3>
+              <p class="card-text">Perfect for business travelers, our Executive Suite offers a spacious living area,
+                high-speed Wi-Fi, and a dedicated workspace for productivity.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold">₱20,000/night</span>
+                <a href="booking.php" class="btn btn-primary">Book Now</a>
+              </div>
             </div>
           </div>
+        </div>
+        <div class="col">
+          <div class="card h-100 room-card">
+            <div class="card-img-container">
+              <img src="{{ asset('img/standardroom.png') }}" class="img-fluid"
+                style="width: 100%; height: 200px; object-fit: cover;" alt="Family Suite">
+            </div>
+            <div class="card-body">
+              <h3 class="card-title fs-5">Standard Suite</h3>
+              <p class="card-text">Ideal for families, Couple, and many more our Standard Suite includes multiple bedrooms, a cozy living area,
+                and child-friendly amenities for a comfortable stay.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold">₱10,000/night</span>
+                <a href="booking.php" class="btn btn-primary">Book Now</a>
+              </div>
+            </div>
+          </div>  
+        </div>
       </div>
-      @endforelse
-    </div>
     </div>
   </section>
-
+  
 @endsection
