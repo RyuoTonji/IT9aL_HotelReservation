@@ -28,43 +28,43 @@
         left: 0;
         width: 250px;
         background-color: #000;
-        padding-top: 20px;
+        padding: 20px 0 0 0;
         z-index: 100;
         height: 100vh;
         overflow-y: auto;
-      }
 
-      .sidebar .nav-link {
-        color: #fff;
-        padding: 12px 20px;
-        margin: 0 10px;
-        display: block;
-        border-radius: 0;
-        font-weight: 600;
-        font-size: 1.1rem;
-        transition: all 0.3s;
-      }
+        .nav-link {
+          color: #fff;
+          padding: 12px 20px;
+          margin: 0 10px;
+          display: block;
+          border-radius: 0;
+          font-weight: 600;
+          font-size: 1.1rem;
+          transition: all 0.3s;
 
-      .sidebar .nav-link.active {
-        background-color: #EFBF04;
-        color: #000;
-      }
+          &.active {
+            background-color: #EFBF04;
+            color: #000;
+          }
 
-      .sidebar .nav-link:hover {
-        background-color: #EFBF04;
-        color: #000;
-        padding: 12px 20px;
-        margin: 0 10px;
-      }
+          &:hover {
+            background-color: #EFBF04;
+            color: #000;
+            padding: 12px 20px;
+            margin: 0 10px;
+          }
+        }
 
-      .sidebar .nav-item {
-        margin-bottom: 5px;
-      }
+        .nav-item {
+          margin-bottom: 5px;
+        }
 
-      .content {
-        margin-left: 250px;
-        padding: 30px;
-        min-height: 100vh;
+        .content {
+          margin-left: 250px;
+          padding: 30px;
+          min-height: 100vh;
+        }
       }
 
       .btn-custom {
@@ -72,11 +72,11 @@
         border-color: #EFBF04;
         font-size: 1rem;
         padding: 8px 16px;
-      }
 
-      .btn-custom:hover {
-        background-color: #d8a803;
-        border-color: #d8a803;
+        &:hover {
+          background-color: #d8a803;
+          border-color: #d8a803;
+        }
       }
 
       h1.main-text {
@@ -94,19 +94,19 @@
         text-align: center;
         padding-bottom: 20px;
         border-bottom: 1px solid #EFBF04;
-      }
 
-      .account-section img {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 10px;
-      }
+        img {
+          width: 80px;
+          height: 80px;
+          margin-bottom: 10px;
+        }
 
-      .account-section p {
-        color: #fff;
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 600;
+        p {
+          color: #fff;
+          margin: 0;
+          font-size: 1rem;
+          font-weight: 600;
+        }
       }
 
       .card {
@@ -124,6 +124,14 @@
         height: 500px;
         /* Adjusted to match image proportion */
       }
+
+      a {
+        color: #d8a803;
+
+        &:hover {
+          color: #000;
+        }
+      }
     </style>
     @yield('styles')
   </head>
@@ -134,7 +142,7 @@
         <nav class="col-md-2 col-12 sidebar">
           @include('admin.partials.sidebar')
         </nav>
-        <main class="col-md-10 col-12 content">
+        <main class="col-md-10 col-12 content ps-5">
           @yield('content')
         </main>
       </div>
