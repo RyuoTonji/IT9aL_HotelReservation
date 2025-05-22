@@ -91,30 +91,62 @@
     }
   </style>
 
-  <div class="reservation-container">
+  <div class="reservation-container col-12">
     <div class="reservation-content">
       <h2>Your Reservation</h2>
 
       @if ($reservation)
-        <div class="reservation-details">
-          <p><strong>Booking ID:</strong> {{ $reservation->ID }}</p>
-          <p><strong>Check-In Date:</strong> {{ \Carbon\Carbon::parse($reservation->CheckInDate)->format('F j, Y') }}</p>
-          <p><strong>Check-Out Date:</strong> {{ \Carbon\Carbon::parse($reservation->CheckOutDate)->format('F j, Y') }}
-          </p>
-          <p><strong>Room Type:</strong> {{ $reservation->roomType->RoomTypeName }}</p>
-          <p><strong>Room Size:</strong> {{ $reservation->roomSize->RoomSizeName }}</p>
-          <p><strong>Assigned Room:</strong> {{ $reservation->assignedRooms->first()->room->RoomName ?? 'N/A' }}</p>
-          <p><strong>Number of Guests:</strong> {{ $reservation->NumberOfGuests }}</p>
-          <p><strong>Booking Status:</strong> {{ $reservation->BookingStatus }}</p>
-          <p><strong>Additional Services:</strong>
-            @if ($reservation->servicesAdded->isEmpty())
-              None
-            @else
-              {{ $reservation->servicesAdded->pluck('ServiceName')->implode(', ') }}
-            @endif
-          </p>
-          <p><strong>Total Amount:</strong> ₱{{ number_format($reservation->costDetails->TotalAmount, 2) }}</p>
-        </div>
+        <table class="table table-bordered">
+          <tr>
+            <th class="col-5">Booking ID</th>
+            <td>{{ $reservation->ID }}</td>
+          </tr>
+          <tr>
+            <th class="col-5">Check-In Date</th>
+            <td>{{ \Carbon\Carbon::parse($reservation->CheckInDate)->format('F j, Y') }}</td>
+          </tr>
+          <tr>
+            <th class="col-5">Check-Out Date</th>
+            <td>{{ \Carbon\Carbon::parse($reservation->CheckOutDate)->format('F j, Y') }}</td>
+          </tr>
+          <tr>
+            <th class="col-5">Room Type</th>
+            <td>{{ $reservation->roomType->RoomTypeName }}</td>
+          </tr>
+          <tr>
+            <th class="col-5">Room Size</th>
+            <td>{{ $reservation->roomSize->RoomSizeName }}</td>
+          </tr>
+          <tr>
+            <th class="col-5">Number of Guests</th>
+            <td>{{ $reservation->NumberOfGuests }}</td>
+          </tr>
+          <tr>
+            <th class="col-5">Additional Services</th>
+            <td>
+              @if ($reservation->servicesAdded->isEmpty())
+                None
+              @else
+                {{ $reservation->servicesAdded->pluck('ServiceName')->implode(', ') }}
+              @endif
+            </td>
+          </tr>
+        </table>
+
+        <table class="table table-bordered">
+          <tr>
+            <th class="col-5">Assigned Room</th>
+            <td>{{ $reservation->assignedRooms->first()->room->RoomName ?? 'N/A' }}</td>
+          </tr>
+          <tr>
+            <th class="col-5">Booking Status</th>
+            <td>{{ $reservation->BookingStatus }}</td>
+          </tr>
+          <tr>
+            <th class="col-5">Total Amount</th>
+            <td>₱{{ number_format($reservation->costDetails->TotalAmount, 2) }}</td>
+          </tr>
+        </table>
       @else
         <div class="alert alert-info">
           You have no active reservations. Start a new booking to reserve your stay!

@@ -142,7 +142,7 @@
         <nav class="col-md-2 col-12 sidebar">
           @include('admin.partials.sidebar')
         </nav>
-        <main class="col-md-10 col-12 content ps-5">
+        <main class="col-md-9 col-10 content ps-5">
           @yield('content')
         </main>
       </div>
